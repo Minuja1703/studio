@@ -10,7 +10,7 @@ import { NoteEditor } from "@/components/note-editor";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent } from "@/components/ui/dialog";
-import { Search, Plus, LogOut, Terminal, Filter, LayoutGrid, X, Cpu } from "lucide-react";
+import { Search, Plus, LogOut, LayoutGrid, X, NotebookPen } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 
 export default function Dashboard() {
@@ -42,7 +42,7 @@ export default function Dashboard() {
   };
 
   const handleCreateNote = async () => {
-    await createNote("NEURAL_ENTRY_" + new Date().getTime().toString().slice(-4), "Initialize thought process...");
+    await createNote("Untitled Note", "");
   };
 
   const handleLogout = async () => {
@@ -51,21 +51,16 @@ export default function Dashboard() {
 
   return (
     <AuthGuard>
-      <div className="relative min-h-screen flex flex-col overflow-x-hidden">
-        <div className="scanline pointer-events-none" />
-        
-        <div className="flex-1 flex flex-col p-6 md:p-10 space-y-10 max-w-7xl mx-auto w-full z-10">
+      <div className="min-h-screen bg-[#fafafa]">
+        <div className="max-w-6xl mx-auto px-6 py-12 md:py-20 space-y-12">
           {/* Header */}
-          <header className="flex flex-col md:flex-row md:items-center justify-between gap-6 border-b border-white/5 pb-8">
-            <div className="space-y-1 group">
-              <h1 className="text-4xl font-black tracking-tighter text-primary flex items-center gap-3">
-                <Cpu className="w-10 h-10 group-hover:rotate-180 transition-transform duration-700" />
-                MONONOTE<span className="text-secondary opacity-50">.AI</span>
+          <header className="flex flex-col md:flex-row md:items-center justify-between gap-8">
+            <div className="space-y-2">
+              <h1 className="text-4xl font-semibold tracking-tight text-neutral-900 flex items-center gap-3">
+                <NotebookPen className="w-8 h-8" />
+                MonoNote
               </h1>
-              <div className="flex items-center gap-2 text-[10px] font-mono text-muted-foreground uppercase tracking-[0.2em] opacity-50">
-                <span className="w-2 h-2 rounded-full bg-green-500 animate-pulse" />
-                System_Active // {user?.email?.split('@')[0]}
-              </div>
+              <p className="text-neutral-500 text-sm">{user?.email}</p>
             </div>
             
             <div className="flex items-center gap-4">
@@ -73,85 +68,76 @@ export default function Dashboard() {
                 variant="ghost" 
                 size="sm" 
                 onClick={handleLogout} 
-                className="text-muted-foreground hover:text-destructive hover:bg-destructive/5 text-[10px] uppercase tracking-widest font-bold"
+                className="text-neutral-500 hover:text-neutral-900 hover:bg-neutral-100"
               >
-                <LogOut className="w-3 h-3 mr-2" /> DISCONNECT
+                Sign out
               </Button>
               <Button 
                 size="lg" 
                 onClick={handleCreateNote} 
-                className="h-12 px-8 bg-primary text-primary-foreground hover:bg-primary/90 shadow-[0_0_30px_rgba(82,206,239,0.2)] rounded-full uppercase font-black tracking-widest text-xs transition-all hover:scale-105 active:scale-95"
+                className="bg-neutral-900 text-white hover:bg-neutral-800 rounded-full px-8 shadow-lg shadow-neutral-200"
               >
-                <Plus className="w-4 h-4 mr-2" /> NEW_ENTRY
+                <Plus className="w-5 h-5 mr-2" /> New Note
               </Button>
             </div>
           </header>
 
           {/* Search & Filters */}
-          <div className="space-y-6">
-            <div className="relative group">
-              <div className="absolute inset-0 bg-primary/5 blur-xl group-focus-within:bg-primary/10 transition-all rounded-2xl" />
-              <Search className="absolute left-5 top-1/2 -translate-y-1/2 w-6 h-6 text-muted-foreground group-focus-within:text-primary transition-colors" />
+          <div className="space-y-8">
+            <div className="relative">
+              <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-neutral-400" />
               <Input
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                placeholder="QUERY_NEURAL_DATABASE..."
-                className="relative pl-14 h-16 bg-card/40 border-white/5 rounded-2xl text-xl font-body focus-visible:ring-primary/20 backdrop-blur-sm transition-all"
+                placeholder="Search your notes..."
+                className="pl-12 h-14 bg-white border-neutral-200 rounded-2xl text-lg shadow-sm focus:ring-neutral-200"
               />
             </div>
 
-            <div className="flex items-center gap-4 overflow-x-auto pb-4 no-scrollbar">
-              <div className="flex items-center gap-2 text-[10px] font-bold uppercase tracking-[0.3em] text-muted-foreground/60 whitespace-nowrap">
-                <Filter className="w-3 h-3" /> CLASSIFY:
-              </div>
-              <div className="flex items-center gap-2">
-                {allTags.map(tag => (
-                  <Badge
-                    key={tag}
-                    variant={activeTags.includes(tag) ? "default" : "outline"}
-                    className={`cursor-pointer px-4 py-1.5 text-[10px] uppercase tracking-widest transition-all rounded-full border-white/10 ${
-                      activeTags.includes(tag) 
-                        ? "bg-secondary text-secondary-foreground shadow-[0_0_15px_rgba(132,121,216,0.3)]" 
-                        : "text-muted-foreground hover:border-primary/50 hover:text-primary"
-                    }`}
-                    onClick={() => toggleTag(tag)}
-                  >
-                    #{tag}
-                  </Badge>
-                ))}
-                {activeTags.length > 0 && (
-                  <Button 
-                    variant="ghost" 
-                    size="sm" 
-                    onClick={() => setActiveTags([])} 
-                    className="h-8 text-[10px] uppercase tracking-widest text-muted-foreground hover:text-destructive"
-                  >
-                    <X className="w-3 h-3 mr-1" /> Reset
-                  </Button>
-                )}
-              </div>
+            <div className="flex items-center gap-3 overflow-x-auto pb-2 no-scrollbar">
+              {allTags.map(tag => (
+                <Badge
+                  key={tag}
+                  variant={activeTags.includes(tag) ? "default" : "secondary"}
+                  className={`cursor-pointer px-5 py-2 text-sm font-medium rounded-full transition-all ${
+                    activeTags.includes(tag) 
+                      ? "bg-neutral-900 text-white" 
+                      : "bg-white text-neutral-600 border-neutral-100 hover:bg-neutral-50 shadow-sm"
+                  }`}
+                  onClick={() => toggleTag(tag)}
+                >
+                  {tag}
+                </Badge>
+              ))}
+              {activeTags.length > 0 && (
+                <Button 
+                  variant="ghost" 
+                  size="sm" 
+                  onClick={() => setActiveTags([])} 
+                  className="text-neutral-400 hover:text-neutral-900"
+                >
+                  Clear all
+                </Button>
+              )}
             </div>
           </div>
 
           {/* Grid */}
           {loading ? (
-            <div className="flex-1 flex flex-col items-center justify-center space-y-4">
-              <div className="w-12 h-12 border-2 border-primary/20 border-t-primary rounded-full animate-spin" />
-              <div className="font-mono text-primary/50 text-xs tracking-[0.5em] animate-pulse">SYNCHRONIZING_BUFFERS...</div>
+            <div className="flex justify-center py-20">
+              <div className="w-8 h-8 border-2 border-neutral-200 border-t-neutral-800 rounded-full animate-spin" />
             </div>
           ) : (
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
               {filteredNotes.map(note => (
                 <NoteCard key={note.id} note={note} onClick={() => setSelectedNote(note)} />
               ))}
               {filteredNotes.length === 0 && (
-                <div className="col-span-full py-32 flex flex-col items-center justify-center text-center space-y-6 border border-dashed border-white/5 rounded-3xl bg-white/[0.01]">
-                  <div className="p-6 rounded-full bg-white/[0.02] border border-white/5">
-                    <LayoutGrid className="w-12 h-12 text-muted-foreground/20" />
-                  </div>
-                  <div className="space-y-2">
-                    <h3 className="text-2xl font-black uppercase tracking-tighter text-muted-foreground/40">Database Empty</h3>
-                    <p className="text-xs font-mono text-muted-foreground/30 uppercase tracking-widest">Awaiting consciousness input.</p>
+                <div className="col-span-full py-40 flex flex-col items-center justify-center text-center space-y-4 bg-white rounded-3xl border border-neutral-100 border-dashed">
+                  <LayoutGrid className="w-12 h-12 text-neutral-200" />
+                  <div className="space-y-1">
+                    <h3 className="text-xl font-medium text-neutral-400">No notes found</h3>
+                    <p className="text-sm text-neutral-300">Start writing to fill this space.</p>
                   </div>
                 </div>
               )}
@@ -160,7 +146,7 @@ export default function Dashboard() {
 
           {/* Note Editor */}
           <Dialog open={!!selectedNote} onOpenChange={() => setSelectedNote(null)}>
-            <DialogContent className="max-w-6xl w-[95vw] h-[85vh] bg-background/80 backdrop-blur-3xl border-white/10 p-0 rounded-3xl overflow-hidden shadow-2xl">
+            <DialogContent className="max-w-4xl w-[95vw] h-[90vh] bg-white p-0 rounded-3xl overflow-hidden shadow-2xl border-none">
               {selectedNote && (
                 <NoteEditor
                   note={selectedNote}

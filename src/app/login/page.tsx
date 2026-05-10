@@ -1,4 +1,3 @@
-
 "use client";
 
 import { useState } from "react";
@@ -9,7 +8,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card, CardHeader, CardTitle, CardDescription, CardContent, CardFooter } from "@/components/ui/card";
 import { toast } from "@/hooks/use-toast";
-import { Hexagon, LogIn, UserPlus } from "lucide-react";
+import { NotebookPen } from "lucide-react";
 
 export default function LoginPage() {
   const [email, setEmail] = useState("");
@@ -22,14 +21,13 @@ export default function LoginPage() {
     try {
       if (isRegistering) {
         await createUserWithEmailAndPassword(auth, email, password);
-        toast({ title: "Account created successfully" });
+        toast({ title: "Welcome to MonoNote" });
       } else {
         await signInWithEmailAndPassword(auth, email, password);
-        toast({ title: "Welcome back" });
       }
       router.push("/");
     } catch (err: any) {
-      toast({ title: err.message, variant: "destructive" });
+      toast({ title: "Authentication error", description: err.message, variant: "destructive" });
     }
   };
 
@@ -38,77 +36,73 @@ export default function LoginPage() {
       await signInWithPopup(auth, new GoogleAuthProvider());
       router.push("/");
     } catch (err: any) {
-      toast({ title: err.message, variant: "destructive" });
+      toast({ title: "Sign in failed", description: err.message, variant: "destructive" });
     }
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center p-6 bg-background relative overflow-hidden">
-      {/* Decorative "N" Element from image */}
-      <div className="fixed left-4 md:left-12 top-1/2 -translate-y-1/2 w-10 h-10 rounded-full border border-primary/20 bg-primary/5 flex items-center justify-center text-primary font-bold text-sm shadow-[0_0_15px_rgba(82,206,239,0.15)] opacity-50">
-        N
-      </div>
-
-      <div className="w-full max-w-md space-y-8 relative z-10">
-        <div className="text-center space-y-2">
-          <div className="inline-flex items-center justify-center p-3 rounded-xl bg-primary/10 border border-primary/20 mb-4">
-            <Hexagon className="w-10 h-10 text-primary animate-pulse" />
+    <div className="min-h-screen flex items-center justify-center p-6 bg-[#fafafa]">
+      <div className="w-full max-w-sm space-y-8">
+        <div className="text-center space-y-3">
+          <div className="inline-flex items-center justify-center w-12 h-12 rounded-full bg-white shadow-sm border mb-2">
+            <NotebookPen className="w-6 h-6 text-neutral-800" />
           </div>
-          <h1 className="text-4xl font-bold tracking-tighter text-foreground uppercase">MonoNote AI</h1>
-          <p className="text-sm text-muted-foreground uppercase tracking-widest font-mono opacity-60">System Authentication Required</p>
+          <h1 className="text-3xl font-medium tracking-tight text-neutral-900">MonoNote</h1>
+          <p className="text-sm text-neutral-500">Your quiet place for thoughts.</p>
         </div>
 
-        <Card className="bg-card/50 border-border/40 shadow-2xl backdrop-blur-sm">
-          <CardHeader>
-            <CardTitle>{isRegistering ? "Register New Consciousness" : "Access Database"}</CardTitle>
-            <CardDescription>Enter credentials to synchronize metadata.</CardDescription>
+        <Card className="border-none shadow-xl shadow-neutral-200/50 bg-white p-2">
+          <CardHeader className="space-y-1">
+            <CardTitle className="text-xl">{isRegistering ? "Create Account" : "Sign In"}</CardTitle>
+            <CardDescription>
+              {isRegistering ? "Join our community of thinkers." : "Welcome back to your space."}
+            </CardDescription>
           </CardHeader>
-          <CardContent>
+          <CardContent className="space-y-4">
             <form onSubmit={handleAuth} className="space-y-4">
               <div className="space-y-2">
                 <Input
                   type="email"
-                  placeholder="USER_IDENTIFIER@DOMAIN"
+                  placeholder="Email"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   required
-                  className="bg-muted/50 border-border/40 focus:ring-primary h-11"
+                  className="bg-neutral-50 border-neutral-200 h-11"
                 />
               </div>
               <div className="space-y-2">
                 <Input
                   type="password"
-                  placeholder="ACCESS_KEY_SECRET"
+                  placeholder="Password"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   required
-                  className="bg-muted/50 border-border/40 focus:ring-primary h-11"
+                  className="bg-neutral-50 border-neutral-200 h-11"
                 />
               </div>
               <Button 
                 type="submit" 
-                className="w-full h-11 uppercase font-bold tracking-widest gap-2 bg-primary text-primary-foreground hover:bg-primary/90 shadow-[0_0_20px_rgba(82,206,239,0.4)]"
+                className="w-full h-11 font-medium bg-neutral-900 text-white hover:bg-neutral-800 rounded-lg"
               >
-                {isRegistering ? <UserPlus className="w-4 h-4" /> : <LogIn className="w-4 h-4" />}
-                {isRegistering ? "Register_User" : "Initialize_Session"}
+                {isRegistering ? "Sign Up" : "Sign In"}
               </Button>
             </form>
             
-            <div className="relative my-6">
-              <div className="absolute inset-0 flex items-center"><span className="w-full border-t border-border/40"></span></div>
-              <div className="relative flex justify-center text-xs uppercase"><span className="bg-card px-2 text-muted-foreground">OR_VIA_EXTERNAL</span></div>
+            <div className="relative">
+              <div className="absolute inset-0 flex items-center"><span className="w-full border-t"></span></div>
+              <div className="relative flex justify-center text-xs uppercase"><span className="bg-white px-2 text-neutral-400">or</span></div>
             </div>
 
-            <Button variant="outline" onClick={googleSignIn} className="w-full border-border/40 h-11 uppercase tracking-widest font-bold">
-              Google_Service_Link
+            <Button variant="outline" onClick={googleSignIn} className="w-full h-11 border-neutral-200 font-medium">
+              Continue with Google
             </Button>
           </CardContent>
-          <CardFooter className="flex justify-center border-t border-border/40 pt-4 mt-2">
+          <CardFooter className="flex justify-center pb-6">
             <button 
               onClick={() => setIsRegistering(!isRegistering)}
-              className="text-xs text-muted-foreground hover:text-primary transition-colors uppercase tracking-widest underline decoration-primary/30 underline-offset-4"
+              className="text-sm text-neutral-500 hover:text-neutral-900 transition-colors underline-offset-4 hover:underline"
             >
-              {isRegistering ? "Existing_User?_Log_In" : "New_Intelligence?_Register"}
+              {isRegistering ? "Already have an account? Sign in" : "Don't have an account? Sign up"}
             </button>
           </CardFooter>
         </Card>

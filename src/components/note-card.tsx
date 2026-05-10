@@ -4,7 +4,7 @@ import { Note } from "@/hooks/use-notes";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { formatDistanceToNow } from "date-fns";
-import { Tag, Clock, ChevronRight } from "lucide-react";
+import { Clock } from "lucide-react";
 
 interface NoteCardProps {
   note: Note;
@@ -14,51 +14,41 @@ interface NoteCardProps {
 export function NoteCard({ note, onClick }: NoteCardProps) {
   return (
     <Card 
-      className="group relative cursor-pointer glow-card bg-card/40 border-white/5 overflow-hidden rounded-2xl hover:bg-white/[0.02]"
+      className="group relative cursor-pointer border-none bg-white shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-300 rounded-3xl p-2"
       onClick={onClick}
     >
-      {/* Decorative element */}
-      <div className="absolute top-0 right-0 w-16 h-16 bg-primary/5 rounded-bl-full translate-x-8 -translate-y-8 group-hover:translate-x-4 group-hover:-translate-y-4 transition-transform duration-500" />
-      
-      <CardHeader className="p-6 space-y-3">
-        <div className="flex justify-between items-start gap-4">
-          <CardTitle className="text-xl font-black leading-tight tracking-tighter uppercase group-hover:text-primary transition-colors">
-            {note.title || "Untitled Entry"}
-          </CardTitle>
-          <div className="text-[10px] font-mono text-muted-foreground/50 whitespace-nowrap flex items-center gap-1.5 pt-1">
-            <Clock className="w-3 h-3" />
-            {note.updatedAt?.seconds 
-              ? formatDistanceToNow(new Date(note.updatedAt.seconds * 1000), { addSuffix: true })
-              : "just now"}
-          </div>
+      <CardHeader className="p-6 pb-2">
+        <CardTitle className="text-xl font-semibold text-neutral-900 line-clamp-1 group-hover:text-neutral-700">
+          {note.title || "Untitled"}
+        </CardTitle>
+        <div className="flex items-center gap-2 text-xs text-neutral-400 pt-1 font-medium">
+          <Clock className="w-3 h-3" />
+          {note.updatedAt?.seconds 
+            ? formatDistanceToNow(new Date(note.updatedAt.seconds * 1000), { addSuffix: true })
+            : "just now"}
         </div>
       </CardHeader>
       
-      <CardContent className="p-6 pt-0 space-y-4">
-        <p className="text-sm text-muted-foreground/70 line-clamp-4 font-body leading-relaxed">
-          {note.content || <span className="italic opacity-30">Empty data buffer...</span>}
+      <CardContent className="p-6 space-y-6">
+        <p className="text-neutral-500 text-sm line-clamp-4 leading-relaxed font-normal">
+          {note.content || "Start writing..."}
         </p>
         
-        <div className="flex items-center justify-between pt-2">
-          <div className="flex flex-wrap gap-1.5">
-            {note.tags && note.tags.length > 0 ? (
-              note.tags.slice(0, 2).map((tag) => (
-                <Badge 
-                  key={tag} 
-                  variant="outline" 
-                  className="text-[9px] px-2 py-0.5 h-4 border-white/10 bg-white/5 text-muted-foreground uppercase tracking-widest font-bold"
-                >
-                  #{tag}
-                </Badge>
-              ))
-            ) : (
-              <span className="text-[9px] text-muted-foreground/30 font-mono tracking-widest">UNTRIAGED</span>
-            )}
-            {note.tags && note.tags.length > 2 && (
-              <span className="text-[9px] text-muted-foreground/30 font-mono">+{note.tags.length - 2}</span>
-            )}
-          </div>
-          <ChevronRight className="w-4 h-4 text-primary/0 group-hover:text-primary/100 translate-x-2 group-hover:translate-x-0 transition-all" />
+        <div className="flex flex-wrap gap-2 pt-2">
+          {note.tags && note.tags.length > 0 ? (
+            note.tags.slice(0, 3).map((tag) => (
+              <Badge 
+                key={tag} 
+                variant="secondary" 
+                className="text-[11px] px-3 py-1 bg-neutral-50 text-neutral-500 border-none rounded-lg"
+              >
+                {tag}
+              </Badge>
+            ))
+          ) : null}
+          {note.tags && note.tags.length > 3 && (
+            <span className="text-[11px] text-neutral-300">+{note.tags.length - 3} more</span>
+          )}
         </div>
       </CardContent>
     </Card>

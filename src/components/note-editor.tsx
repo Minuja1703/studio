@@ -6,7 +6,7 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { X, Sparkles, Hash, Trash2, Save, FileText, Share2, Maximize2 } from "lucide-react";
+import { X, Sparkles, Hash, Trash2, Save, FileText } from "lucide-react";
 import { summarizeNoteContent } from "@/ai/flows/summarize-note-content-flow";
 import { suggestNoteTags } from "@/ai/flows/suggest-note-tags";
 import { ScrollArea } from "@/components/ui/scroll-area";
@@ -37,7 +37,7 @@ export function NoteEditor({ note, onUpdate, onDelete, onClose }: NoteEditorProp
 
   const handleSave = () => {
     onUpdate({ title, content, tags, summary });
-    toast({ title: "CORE_DATABASE_UPDATED" });
+    toast({ title: "Note saved" });
   };
 
   const handleSummarize = async () => {
@@ -48,7 +48,7 @@ export function NoteEditor({ note, onUpdate, onDelete, onClose }: NoteEditorProp
       setSummary(result.summary);
       onUpdate({ summary: result.summary });
     } catch (err) {
-      toast({ title: "HEURISTIC_FAILURE", variant: "destructive" });
+      toast({ title: "Summarization failed", variant: "destructive" });
     } finally {
       setIsSummarizing(false);
     }
@@ -63,7 +63,7 @@ export function NoteEditor({ note, onUpdate, onDelete, onClose }: NoteEditorProp
       setTags(uniqueTags);
       onUpdate({ tags: uniqueTags });
     } catch (err) {
-      toast({ title: "CLASSIFICATION_ERROR", variant: "destructive" });
+      toast({ title: "Tag suggestion failed", variant: "destructive" });
     } finally {
       setIsSuggestingTags(false);
     }
@@ -89,72 +89,63 @@ export function NoteEditor({ note, onUpdate, onDelete, onClose }: NoteEditorProp
   };
 
   return (
-    <div className="flex flex-col h-full bg-card/30">
-      {/* Top Bar */}
-      <div className="flex items-center justify-between px-8 py-6 border-b border-white/5 bg-white/[0.02]">
+    <div className="flex flex-col h-full bg-white">
+      {/* Header */}
+      <div className="flex items-center justify-between px-10 py-6 border-b border-neutral-100">
         <div className="flex-1 mr-4">
           <Input
             value={title}
             onChange={(e) => setTitle(e.target.value)}
-            placeholder="ENTRY_IDENTIFIER"
-            className="border-none text-3xl font-black bg-transparent p-0 focus-visible:ring-0 placeholder:opacity-10 uppercase tracking-tighter text-primary"
+            placeholder="Untitled Note"
+            className="border-none text-2xl font-semibold bg-transparent p-0 focus-visible:ring-0 placeholder:text-neutral-200 text-neutral-900"
           />
         </div>
-        <div className="flex items-center gap-3">
-          <Button variant="ghost" size="icon" onClick={onDelete} className="hover:text-destructive hover:bg-destructive/5 rounded-full">
+        <div className="flex items-center gap-2">
+          <Button variant="ghost" size="icon" onClick={onDelete} className="text-neutral-400 hover:text-red-500 hover:bg-red-50 rounded-full">
             <Trash2 className="w-5 h-5" />
           </Button>
-          <Button size="sm" onClick={handleSave} className="gap-2 bg-primary text-primary-foreground font-black px-6 rounded-full tracking-widest text-[10px]">
-            <Save className="w-4 h-4" /> COMMIT_CHANGES
+          <Button onClick={handleSave} className="bg-neutral-900 text-white hover:bg-neutral-800 rounded-full px-6 font-medium">
+            Save Changes
           </Button>
           <Button variant="ghost" size="icon" onClick={onClose} className="rounded-full">
-            <X className="w-6 h-6" />
+            <X className="w-6 h-6 text-neutral-400" />
           </Button>
         </div>
       </div>
 
       <div className="flex flex-1 overflow-hidden">
         {/* Main Editor */}
-        <div className="flex-1 flex flex-col p-8 md:p-12 overflow-hidden border-r border-white/5">
-          <div className="flex items-center gap-3 mb-6">
-            <div className="w-8 h-8 rounded-lg bg-primary/10 border border-primary/20 flex items-center justify-center">
-              <FileText className="w-4 h-4 text-primary" />
-            </div>
-            <h3 className="text-[10px] font-black uppercase tracking-[0.4em] text-muted-foreground/60">Data_Content</h3>
-          </div>
+        <div className="flex-1 flex flex-col p-10 md:p-14 overflow-hidden">
           <Textarea
             value={content}
             onChange={(e) => setContent(e.target.value)}
-            placeholder="Awaiting intelligence input..."
-            className="flex-1 bg-transparent border-none resize-none p-0 focus-visible:ring-0 text-xl leading-relaxed font-body placeholder:opacity-5 text-foreground/90 scrollbar-hide"
+            placeholder="Write your thoughts..."
+            className="flex-1 bg-transparent border-none resize-none p-0 focus-visible:ring-0 text-lg leading-relaxed text-neutral-700 placeholder:text-neutral-200"
           />
         </div>
 
         {/* Sidebar */}
-        <div className="w-96 flex flex-col p-8 space-y-10 bg-white/[0.01]">
-          {/* Metadata */}
-          <section className="space-y-6">
+        <div className="w-80 flex flex-col border-l border-neutral-100 bg-[#fafafa] p-8 space-y-10">
+          {/* Tags */}
+          <section className="space-y-4">
             <div className="flex items-center justify-between">
-              <div className="flex items-center gap-2">
-                <Hash className="w-4 h-4 text-secondary" />
-                <h3 className="text-[10px] font-black uppercase tracking-[0.3em] text-secondary">Classifiers</h3>
-              </div>
+              <h3 className="text-xs font-semibold text-neutral-400 uppercase tracking-widest">Tags</h3>
               <Button 
                 variant="ghost" 
                 size="sm" 
-                className="h-8 text-[9px] font-black tracking-widest uppercase gap-2 hover:text-primary hover:bg-primary/5 border border-white/5" 
+                className="h-7 text-[10px] font-semibold text-neutral-400 hover:text-neutral-900" 
                 onClick={handleSuggestTags}
                 disabled={isSuggestingTags || !content}
               >
-                <Sparkles className={`w-3 h-3 ${isSuggestingTags ? 'animate-spin' : ''}`} />
-                {isSuggestingTags ? 'PROCESSING' : 'AUTO_TAG'}
+                <Sparkles className={`w-3 h-3 mr-1 ${isSuggestingTags ? 'animate-spin' : ''}`} />
+                AI Suggest
               </Button>
             </div>
             <div className="flex flex-wrap gap-2">
               {tags.map((tag) => (
-                <Badge key={tag} variant="secondary" className="gap-2 px-3 py-1.5 h-8 text-[10px] bg-white/5 border-white/10 text-foreground uppercase tracking-widest font-black rounded-lg group">
-                  #{tag}
-                  <button onClick={() => removeTag(tag)} className="text-muted-foreground hover:text-destructive opacity-50 group-hover:opacity-100 transition-opacity">
+                <Badge key={tag} variant="secondary" className="gap-2 px-3 py-1.5 bg-white text-neutral-600 border border-neutral-200 rounded-lg group">
+                  {tag}
+                  <button onClick={() => removeTag(tag)} className="text-neutral-300 hover:text-neutral-900 transition-colors">
                     <X className="w-3 h-3" />
                   </button>
                 </Badge>
@@ -163,40 +154,36 @@ export function NoteEditor({ note, onUpdate, onDelete, onClose }: NoteEditorProp
                 value={newTag}
                 onChange={(e) => setNewTag(e.target.value)}
                 onKeyDown={addTag}
-                placeholder="+ ADD_CLASS"
-                className="bg-transparent border-none focus:outline-none text-[10px] w-24 placeholder:opacity-20 font-mono tracking-widest uppercase pl-2"
+                placeholder="+ Add tag"
+                className="bg-transparent border-none focus:outline-none text-sm w-full placeholder:text-neutral-300 mt-2"
               />
             </div>
           </section>
 
-          {/* AI Intelligence */}
-          <section className="flex-1 flex flex-col space-y-6 overflow-hidden">
+          {/* AI Summary */}
+          <section className="flex-1 flex flex-col space-y-4 overflow-hidden">
             <div className="flex items-center justify-between">
-              <div className="flex items-center gap-2">
-                <Sparkles className="w-4 h-4 text-primary" />
-                <h3 className="text-[10px] font-black uppercase tracking-[0.3em] text-primary">Synthesis</h3>
-              </div>
+              <h3 className="text-xs font-semibold text-neutral-400 uppercase tracking-widest">AI Summary</h3>
               <Button 
                 variant="ghost" 
                 size="sm" 
-                className="h-8 text-[9px] font-black tracking-widest uppercase gap-2 hover:text-primary hover:bg-primary/5 border border-white/5" 
+                className="h-7 text-[10px] font-semibold text-neutral-400 hover:text-neutral-900" 
                 onClick={handleSummarize}
                 disabled={isSummarizing || !content}
               >
-                <Sparkles className={`w-3 h-3 ${isSummarizing ? 'animate-spin' : ''}`} />
-                {isSummarizing ? 'SYNTHESIZING' : 'GENERATE'}
+                <Sparkles className={`w-3 h-3 mr-1 ${isSummarizing ? 'animate-spin' : ''}`} />
+                Summarize
               </Button>
             </div>
-            <ScrollArea className="flex-1 rounded-2xl border border-white/5 p-6 bg-black/20 backdrop-blur-sm">
-              <div className="text-sm text-muted-foreground/80 leading-relaxed font-body">
+            <ScrollArea className="flex-1 rounded-2xl border border-neutral-200 p-6 bg-white shadow-sm">
+              <div className="text-sm text-neutral-500 leading-relaxed italic">
                 {isSummarizing ? (
                   <div className="space-y-3">
-                    <div className="h-4 bg-white/5 rounded animate-pulse w-full" />
-                    <div className="h-4 bg-white/5 rounded animate-pulse w-3/4" />
-                    <div className="h-4 bg-white/5 rounded animate-pulse w-5/6" />
+                    <div className="h-3 bg-neutral-100 rounded animate-pulse w-full" />
+                    <div className="h-3 bg-neutral-100 rounded animate-pulse w-3/4" />
                   </div>
                 ) : (
-                  summary || <span className="text-[10px] font-mono opacity-20 uppercase tracking-[0.2em]">Ready for synthesis.</span>
+                  summary || "No summary generated yet."
                 )}
               </div>
             </ScrollArea>
