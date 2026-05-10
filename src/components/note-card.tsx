@@ -1,10 +1,7 @@
 "use client";
 
 import { Note } from "@/hooks/use-notes";
-import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
 import { formatDistanceToNow } from "date-fns";
-import { Clock } from "lucide-react";
 
 interface NoteCardProps {
   note: Note;
@@ -13,44 +10,41 @@ interface NoteCardProps {
 
 export function NoteCard({ note, onClick }: NoteCardProps) {
   return (
-    <Card 
-      className="group relative cursor-pointer border-none bg-white shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-300 rounded-3xl p-2"
+    <div 
+      className="group cursor-pointer space-y-6 transition-all duration-500"
       onClick={onClick}
     >
-      <CardHeader className="p-6 pb-2">
-        <CardTitle className="text-xl font-semibold text-neutral-900 line-clamp-1 group-hover:text-neutral-700">
-          {note.title || "Untitled"}
-        </CardTitle>
-        <div className="flex items-center gap-2 text-xs text-neutral-400 pt-1 font-medium">
-          <Clock className="w-3 h-3" />
-          {note.updatedAt?.seconds 
-            ? formatDistanceToNow(new Date(note.updatedAt.seconds * 1000), { addSuffix: true })
-            : "just now"}
+      <div className="aspect-[4/3] bg-white border border-neutral-100 rounded-[2rem] p-8 shadow-[0_8px_30px_rgb(0,0,0,0.02)] group-hover:shadow-[0_20px_60px_rgb(0,0,0,0.06)] group-hover:-translate-y-2 transition-all duration-500 flex flex-col">
+        <div className="flex-1 overflow-hidden">
+          <p className="text-neutral-400 text-xs font-bold uppercase tracking-widest mb-4">
+            {note.updatedAt?.seconds 
+              ? formatDistanceToNow(new Date(note.updatedAt.seconds * 1000), { addSuffix: true })
+              : "Moments ago"}
+          </p>
+          <h3 className="text-2xl font-semibold text-neutral-900 mb-4 line-clamp-1 group-hover:text-neutral-700 transition-colors">
+            {note.title || "Untitled Entry"}
+          </h3>
+          <p className="text-neutral-500 text-sm leading-relaxed line-clamp-4 font-medium">
+            {note.content || "No content provided."}
+          </p>
         </div>
-      </CardHeader>
-      
-      <CardContent className="p-6 space-y-6">
-        <p className="text-neutral-500 text-sm line-clamp-4 leading-relaxed font-normal">
-          {note.content || "Start writing..."}
-        </p>
         
-        <div className="flex flex-wrap gap-2 pt-2">
-          {note.tags && note.tags.length > 0 ? (
-            note.tags.slice(0, 3).map((tag) => (
-              <Badge 
-                key={tag} 
-                variant="secondary" 
-                className="text-[11px] px-3 py-1 bg-neutral-50 text-neutral-500 border-none rounded-lg"
-              >
-                {tag}
-              </Badge>
-            ))
-          ) : null}
-          {note.tags && note.tags.length > 3 && (
-            <span className="text-[11px] text-neutral-300">+{note.tags.length - 3} more</span>
+        <div className="flex flex-wrap gap-2 mt-6">
+          {note.tags && note.tags.slice(0, 2).map((tag) => (
+            <span 
+              key={tag} 
+              className="text-[10px] font-bold uppercase tracking-widest text-neutral-300"
+            >
+              #{tag}
+            </span>
+          ))}
+          {note.tags && note.tags.length > 2 && (
+            <span className="text-[10px] font-bold uppercase tracking-widest text-neutral-200">
+              +{note.tags.length - 2}
+            </span>
           )}
         </div>
-      </CardContent>
-    </Card>
+      </div>
+    </div>
   );
 }

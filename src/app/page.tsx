@@ -1,29 +1,25 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { AuthGuard } from "@/components/auth-guard";
-import { auth } from "@/lib/firebase";
-import { signOut, User } from "firebase/auth";
+import { useAuth, useUser } from "@/firebase";
+import { signOut } from "firebase/auth";
 import { useNotes, Note } from "@/hooks/use-notes";
 import { NoteCard } from "@/components/note-card";
 import { NoteEditor } from "@/components/note-editor";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent } from "@/components/ui/dialog";
-import { Search, Plus, LogOut, LayoutGrid, X, NotebookPen } from "lucide-react";
+import { Search, Plus, LogOut, LayoutGrid, NotebookPen, User } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 
 export default function Dashboard() {
-  const [user, setUser] = useState<User | null>(null);
+  const { user } = useUser();
+  const auth = useAuth();
   const { notes, loading, createNote, updateNote, deleteNote } = useNotes(user?.uid || null);
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedNote, setSelectedNote] = useState<Note | null>(null);
   const [activeTags, setActiveTags] = useState<string[]>([]);
-
-  useEffect(() => {
-    const unsubscribe = auth.onAuthStateChanged((u) => setUser(u));
-    return () => unsubscribe();
-  }, []);
 
   const allTags = Array.from(new Set(notes.flatMap(n => n.tags || [])));
 
@@ -52,101 +48,109 @@ export default function Dashboard() {
   return (
     <AuthGuard>
       <div className="min-h-screen bg-[#fafafa]">
-        <div className="max-w-6xl mx-auto px-6 py-12 md:py-20 space-y-12">
-          {/* Header */}
-          <header className="flex flex-col md:flex-row md:items-center justify-between gap-8">
-            <div className="space-y-2">
-              <h1 className="text-4xl font-semibold tracking-tight text-neutral-900 flex items-center gap-3">
-                <NotebookPen className="w-8 h-8" />
+        <div className="max-w-7xl mx-auto px-8 py-16 md:py-24 space-y-16">
+          {/* Gallery Header */}
+          <header className="flex flex-col md:flex-row md:items-end justify-between gap-8 border-b border-neutral-200 pb-12">
+            <div className="space-y-4">
+              <div className="inline-flex items-center gap-2 text-neutral-400 font-medium text-xs uppercase tracking-[0.2em]">
+                <NotebookPen className="w-4 h-4" />
+                Personal Archive
+              </div>
+              <h1 className="text-5xl font-semibold tracking-tight text-neutral-900">
                 MonoNote
               </h1>
-              <p className="text-neutral-500 text-sm">{user?.email}</p>
+              <div className="flex items-center gap-2 text-neutral-500 text-sm font-medium">
+                <User className="w-3.5 h-3.5" />
+                {user?.email}
+              </div>
             </div>
             
             <div className="flex items-center gap-4">
               <Button 
-                variant="ghost" 
-                size="sm" 
+                variant="outline" 
+                size="lg" 
                 onClick={handleLogout} 
-                className="text-neutral-500 hover:text-neutral-900 hover:bg-neutral-100"
+                className="border-neutral-200 text-neutral-600 hover:bg-neutral-50 rounded-full px-8 h-12"
               >
                 Sign out
               </Button>
               <Button 
                 size="lg" 
                 onClick={handleCreateNote} 
-                className="bg-neutral-900 text-white hover:bg-neutral-800 rounded-full px-8 shadow-lg shadow-neutral-200"
+                className="bg-neutral-900 text-white hover:bg-neutral-800 rounded-full px-10 h-12 shadow-2xl shadow-neutral-300"
               >
-                <Plus className="w-5 h-5 mr-2" /> New Note
+                <Plus className="w-5 h-5 mr-2" /> New Entry
               </Button>
             </div>
           </header>
 
-          {/* Search & Filters */}
-          <div className="space-y-8">
-            <div className="relative">
-              <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-neutral-400" />
+          {/* Search & Curation */}
+          <div className="space-y-10">
+            <div className="relative group max-w-2xl">
+              <Search className="absolute left-0 top-1/2 -translate-y-1/2 w-5 h-5 text-neutral-300 group-focus-within:text-neutral-900 transition-colors" />
               <Input
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                placeholder="Search your notes..."
-                className="pl-12 h-14 bg-white border-neutral-200 rounded-2xl text-lg shadow-sm focus:ring-neutral-200"
+                placeholder="Search the archive..."
+                className="pl-8 h-12 bg-transparent border-none border-b border-neutral-200 rounded-none text-xl shadow-none focus-visible:ring-0 focus:border-neutral-900 transition-all placeholder:text-neutral-200"
               />
             </div>
 
-            <div className="flex items-center gap-3 overflow-x-auto pb-2 no-scrollbar">
+            <div className="flex items-center gap-2 overflow-x-auto pb-2 no-scrollbar">
+              <span className="text-xs font-bold text-neutral-300 uppercase tracking-widest mr-4">Tags:</span>
               {allTags.map(tag => (
-                <Badge
+                <button
                   key={tag}
-                  variant={activeTags.includes(tag) ? "default" : "secondary"}
-                  className={`cursor-pointer px-5 py-2 text-sm font-medium rounded-full transition-all ${
-                    activeTags.includes(tag) 
-                      ? "bg-neutral-900 text-white" 
-                      : "bg-white text-neutral-600 border-neutral-100 hover:bg-neutral-50 shadow-sm"
-                  }`}
                   onClick={() => toggleTag(tag)}
+                  className={`px-4 py-1.5 text-xs font-semibold rounded-full border transition-all ${
+                    activeTags.includes(tag) 
+                      ? "bg-neutral-900 border-neutral-900 text-white" 
+                      : "bg-white border-neutral-100 text-neutral-400 hover:border-neutral-300 hover:text-neutral-600"
+                  }`}
                 >
                   {tag}
-                </Badge>
+                </button>
               ))}
               {activeTags.length > 0 && (
                 <Button 
                   variant="ghost" 
                   size="sm" 
                   onClick={() => setActiveTags([])} 
-                  className="text-neutral-400 hover:text-neutral-900"
+                  className="text-neutral-400 hover:text-neutral-900 text-xs font-bold uppercase"
                 >
-                  Clear all
+                  Reset
                 </Button>
               )}
             </div>
           </div>
 
-          {/* Grid */}
+          {/* Gallery Grid */}
           {loading ? (
-            <div className="flex justify-center py-20">
-              <div className="w-8 h-8 border-2 border-neutral-200 border-t-neutral-800 rounded-full animate-spin" />
+            <div className="flex justify-center py-40">
+              <div className="w-6 h-6 border-2 border-neutral-200 border-t-neutral-800 rounded-full animate-spin" />
             </div>
           ) : (
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-x-12 gap-y-16">
               {filteredNotes.map(note => (
                 <NoteCard key={note.id} note={note} onClick={() => setSelectedNote(note)} />
               ))}
               {filteredNotes.length === 0 && (
-                <div className="col-span-full py-40 flex flex-col items-center justify-center text-center space-y-4 bg-white rounded-3xl border border-neutral-100 border-dashed">
-                  <LayoutGrid className="w-12 h-12 text-neutral-200" />
-                  <div className="space-y-1">
-                    <h3 className="text-xl font-medium text-neutral-400">No notes found</h3>
-                    <p className="text-sm text-neutral-300">Start writing to fill this space.</p>
+                <div className="col-span-full py-48 flex flex-col items-center justify-center text-center space-y-6">
+                  <div className="w-16 h-16 rounded-full bg-neutral-50 flex items-center justify-center text-neutral-200">
+                    <LayoutGrid className="w-8 h-8" />
+                  </div>
+                  <div className="space-y-2">
+                    <h3 className="text-2xl font-medium text-neutral-400">Empty Space</h3>
+                    <p className="text-neutral-300 font-medium">Capture your first thought to begin the collection.</p>
                   </div>
                 </div>
               )}
             </div>
           )}
 
-          {/* Note Editor */}
+          {/* Immersive Note Editor */}
           <Dialog open={!!selectedNote} onOpenChange={() => setSelectedNote(null)}>
-            <DialogContent className="max-w-4xl w-[95vw] h-[90vh] bg-white p-0 rounded-3xl overflow-hidden shadow-2xl border-none">
+            <DialogContent className="max-w-screen-2xl w-[98vw] h-[95vh] bg-white p-0 rounded-[2rem] overflow-hidden shadow-[0_32px_128px_-16px_rgba(0,0,0,0.15)] border-none">
               {selectedNote && (
                 <NoteEditor
                   note={selectedNote}

@@ -1,7 +1,6 @@
-
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import { 
   collection, 
   query, 
@@ -12,10 +11,9 @@ import {
   deleteDoc, 
   doc, 
   orderBy, 
-  Timestamp,
   serverTimestamp 
 } from "firebase/firestore";
-import { db } from "@/lib/firebase";
+import { useFirestore } from "@/firebase";
 
 export interface Note {
   id: string;
@@ -31,21 +29,25 @@ export interface Note {
 export function useNotes(userId: string | null) {
   const [notes, setNotes] = useState<Note[]>([]);
   const [loading, setLoading] = useState(true);
+  const db = useFirestore();
+
+  const notesQuery = useMemo(() => {
+    if (!userId || !db) return null;
+    return query(
+      collection(db, "notes"),
+      where("userId", "==", userId),
+      orderBy("updatedAt", "desc")
+    );
+  }, [userId, db]);
 
   useEffect(() => {
-    if (!userId) {
+    if (!notesQuery) {
       setNotes([]);
       setLoading(false);
       return;
     }
 
-    const q = query(
-      collection(db, "notes"),
-      where("userId", "==", userId),
-      orderBy("updatedAt", "desc")
-    );
-
-    const unsubscribe = onSnapshot(q, (snapshot) => {
+    const unsubscribe = onSnapshot(notesQuery, (snapshot) => {
       const fetchedNotes = snapshot.docs.map(doc => ({
         id: doc.id,
         ...doc.data()
@@ -55,11 +57,11 @@ export function useNotes(userId: string | null) {
     });
 
     return () => unsubscribe();
-  }, [userId]);
+  }, [notesQuery]);
 
   const createNote = async (title: string, content: string, tags: string[] = []) => {
-    if (!userId) return;
-    await addDoc(collection(db, "notes"), {
+    if (!userId || !db) return;
+    addDoc(collection(db, "notes"), {
       userId,
       title,
       content,
@@ -70,15 +72,17 @@ export function useNotes(userId: string | null) {
   };
 
   const updateNote = async (id: string, updates: Partial<Note>) => {
+    if (!db) return;
     const noteRef = doc(db, "notes", id);
-    await updateDoc(noteRef, {
+    updateDoc(noteRef, {
       ...updates,
       updatedAt: serverTimestamp(),
     });
   };
 
   const deleteNote = async (id: string) => {
-    await deleteDoc(doc(db, "notes", id));
+    if (!db) return;
+    deleteDoc(doc(db, "notes", id));
   };
 
   return { notes, loading, createNote, updateNote, deleteNote };
