@@ -43,8 +43,13 @@ export default function LoginPage() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center p-6 bg-background">
-      <div className="w-full max-w-md space-y-8">
+    <div className="min-h-screen flex items-center justify-center p-6 bg-background relative overflow-hidden">
+      {/* Decorative "N" Element from image */}
+      <div className="fixed left-4 md:left-12 top-1/2 -translate-y-1/2 w-10 h-10 rounded-full border border-primary/20 bg-primary/5 flex items-center justify-center text-primary font-bold text-sm shadow-[0_0_15px_rgba(82,206,239,0.15)] opacity-50">
+        N
+      </div>
+
+      <div className="w-full max-w-md space-y-8 relative z-10">
         <div className="text-center space-y-2">
           <div className="inline-flex items-center justify-center p-3 rounded-xl bg-primary/10 border border-primary/20 mb-4">
             <Hexagon className="w-10 h-10 text-primary animate-pulse" />
@@ -65,9 +70,9 @@ export default function LoginPage() {
                   type="email"
                   placeholder="USER_IDENTIFIER@DOMAIN"
                   value={email}
-                  onChange={(e) => setEmail}
+                  onChange={(e) => setEmail(e.target.value)}
                   required
-                  className="bg-muted/50 border-border/40 focus:ring-primary"
+                  className="bg-muted/50 border-border/40 focus:ring-primary h-11"
                 />
               </div>
               <div className="space-y-2">
@@ -77,10 +82,13 @@ export default function LoginPage() {
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   required
-                  className="bg-muted/50 border-border/40 focus:ring-primary"
+                  className="bg-muted/50 border-border/40 focus:ring-primary h-11"
                 />
               </div>
-              <Button type="submit" className="w-full h-11 uppercase font-bold tracking-widest gap-2">
+              <Button 
+                type="submit" 
+                className="w-full h-11 uppercase font-bold tracking-widest gap-2 bg-primary text-primary-foreground hover:bg-primary/90 shadow-[0_0_20px_rgba(82,206,239,0.4)]"
+              >
                 {isRegistering ? <UserPlus className="w-4 h-4" /> : <LogIn className="w-4 h-4" />}
                 {isRegistering ? "Register_User" : "Initialize_Session"}
               </Button>
@@ -88,10 +96,10 @@ export default function LoginPage() {
             
             <div className="relative my-6">
               <div className="absolute inset-0 flex items-center"><span className="w-full border-t border-border/40"></span></div>
-              <div className="relative flex justify-center text-xs uppercase"><span className="bg-background px-2 text-muted-foreground">OR_VIA_EXTERNAL</span></div>
+              <div className="relative flex justify-center text-xs uppercase"><span className="bg-card px-2 text-muted-foreground">OR_VIA_EXTERNAL</span></div>
             </div>
 
-            <Button variant="outline" onClick={googleSignIn} className="w-full border-border/40 h-11 uppercase tracking-widest">
+            <Button variant="outline" onClick={googleSignIn} className="w-full border-border/40 h-11 uppercase tracking-widest font-bold">
               Google_Service_Link
             </Button>
           </CardContent>
