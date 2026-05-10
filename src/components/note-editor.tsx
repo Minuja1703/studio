@@ -1,4 +1,3 @@
-
 "use client";
 
 import { useState, useEffect } from "react";
@@ -7,7 +6,7 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { X, Sparkles, Hash, Trash2, Save, FileText } from "lucide-react";
+import { X, Sparkles, Hash, Trash2, Save, FileText, Share2, Maximize2 } from "lucide-react";
 import { summarizeNoteContent } from "@/ai/flows/summarize-note-content-flow";
 import { suggestNoteTags } from "@/ai/flows/suggest-note-tags";
 import { ScrollArea } from "@/components/ui/scroll-area";
@@ -38,7 +37,7 @@ export function NoteEditor({ note, onUpdate, onDelete, onClose }: NoteEditorProp
 
   const handleSave = () => {
     onUpdate({ title, content, tags, summary });
-    toast({ title: "Note saved successfully" });
+    toast({ title: "CORE_DATABASE_UPDATED" });
   };
 
   const handleSummarize = async () => {
@@ -49,7 +48,7 @@ export function NoteEditor({ note, onUpdate, onDelete, onClose }: NoteEditorProp
       setSummary(result.summary);
       onUpdate({ summary: result.summary });
     } catch (err) {
-      toast({ title: "Failed to summarize note", variant: "destructive" });
+      toast({ title: "HEURISTIC_FAILURE", variant: "destructive" });
     } finally {
       setIsSummarizing(false);
     }
@@ -64,7 +63,7 @@ export function NoteEditor({ note, onUpdate, onDelete, onClose }: NoteEditorProp
       setTags(uniqueTags);
       onUpdate({ tags: uniqueTags });
     } catch (err) {
-      toast({ title: "Failed to suggest tags", variant: "destructive" });
+      toast({ title: "CLASSIFICATION_ERROR", variant: "destructive" });
     } finally {
       setIsSuggestingTags(false);
     }
@@ -90,64 +89,72 @@ export function NoteEditor({ note, onUpdate, onDelete, onClose }: NoteEditorProp
   };
 
   return (
-    <div className="flex flex-col h-full space-y-6">
-      <div className="flex items-center justify-between border-b border-border/40 pb-4">
-        <Input
-          value={title}
-          onChange={(e) => setTitle(e.target.value)}
-          placeholder="NOTE_TITLE_REQUIRED"
-          className="border-none text-2xl font-bold bg-transparent p-0 focus-visible:ring-0 placeholder:opacity-30"
-        />
-        <div className="flex items-center gap-2">
-          <Button variant="ghost" size="icon" onClick={onDelete} className="hover:text-destructive">
+    <div className="flex flex-col h-full bg-card/30">
+      {/* Top Bar */}
+      <div className="flex items-center justify-between px-8 py-6 border-b border-white/5 bg-white/[0.02]">
+        <div className="flex-1 mr-4">
+          <Input
+            value={title}
+            onChange={(e) => setTitle(e.target.value)}
+            placeholder="ENTRY_IDENTIFIER"
+            className="border-none text-3xl font-black bg-transparent p-0 focus-visible:ring-0 placeholder:opacity-10 uppercase tracking-tighter text-primary"
+          />
+        </div>
+        <div className="flex items-center gap-3">
+          <Button variant="ghost" size="icon" onClick={onDelete} className="hover:text-destructive hover:bg-destructive/5 rounded-full">
             <Trash2 className="w-5 h-5" />
           </Button>
-          <Button variant="outline" size="sm" onClick={handleSave} className="gap-2">
-            <Save className="w-4 h-4" /> SAVE
+          <Button size="sm" onClick={handleSave} className="gap-2 bg-primary text-primary-foreground font-black px-6 rounded-full tracking-widest text-[10px]">
+            <Save className="w-4 h-4" /> COMMIT_CHANGES
           </Button>
-          <Button variant="ghost" size="icon" onClick={onClose}>
-            <X className="w-5 h-5" />
+          <Button variant="ghost" size="icon" onClick={onClose} className="rounded-full">
+            <X className="w-6 h-6" />
           </Button>
         </div>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-8 flex-1 overflow-hidden">
-        <div className="md:col-span-2 flex flex-col space-y-4 overflow-hidden">
-          <div className="flex items-center justify-between">
-            <h3 className="text-xs font-bold uppercase tracking-widest text-primary opacity-80 flex items-center gap-2">
-              <FileText className="w-4 h-4" /> Content
-            </h3>
+      <div className="flex flex-1 overflow-hidden">
+        {/* Main Editor */}
+        <div className="flex-1 flex flex-col p-8 md:p-12 overflow-hidden border-r border-white/5">
+          <div className="flex items-center gap-3 mb-6">
+            <div className="w-8 h-8 rounded-lg bg-primary/10 border border-primary/20 flex items-center justify-center">
+              <FileText className="w-4 h-4 text-primary" />
+            </div>
+            <h3 className="text-[10px] font-black uppercase tracking-[0.4em] text-muted-foreground/60">Data_Content</h3>
           </div>
           <Textarea
             value={content}
             onChange={(e) => setContent(e.target.value)}
-            placeholder="Type your digital consciousness here..."
-            className="flex-1 bg-transparent border-none resize-none p-0 focus-visible:ring-0 text-lg leading-relaxed font-body placeholder:opacity-20"
+            placeholder="Awaiting intelligence input..."
+            className="flex-1 bg-transparent border-none resize-none p-0 focus-visible:ring-0 text-xl leading-relaxed font-body placeholder:opacity-5 text-foreground/90 scrollbar-hide"
           />
         </div>
 
-        <div className="flex flex-col space-y-6 border-l border-border/40 pl-8 overflow-hidden">
-          <div className="space-y-4">
+        {/* Sidebar */}
+        <div className="w-96 flex flex-col p-8 space-y-10 bg-white/[0.01]">
+          {/* Metadata */}
+          <section className="space-y-6">
             <div className="flex items-center justify-between">
-              <h3 className="text-xs font-bold uppercase tracking-widest text-secondary opacity-80 flex items-center gap-2">
-                <Hash className="w-4 h-4" /> Meta Tags
-              </h3>
+              <div className="flex items-center gap-2">
+                <Hash className="w-4 h-4 text-secondary" />
+                <h3 className="text-[10px] font-black uppercase tracking-[0.3em] text-secondary">Classifiers</h3>
+              </div>
               <Button 
                 variant="ghost" 
                 size="sm" 
-                className="h-6 text-[10px] gap-1 hover:text-primary" 
+                className="h-8 text-[9px] font-black tracking-widest uppercase gap-2 hover:text-primary hover:bg-primary/5 border border-white/5" 
                 onClick={handleSuggestTags}
                 disabled={isSuggestingTags || !content}
               >
                 <Sparkles className={`w-3 h-3 ${isSuggestingTags ? 'animate-spin' : ''}`} />
-                {isSuggestingTags ? 'PROCESSING...' : 'SUGGEST'}
+                {isSuggestingTags ? 'PROCESSING' : 'AUTO_TAG'}
               </Button>
             </div>
             <div className="flex flex-wrap gap-2">
               {tags.map((tag) => (
-                <Badge key={tag} variant="secondary" className="gap-1 pl-2 pr-1 h-6 text-xs bg-muted border-border/40 text-foreground">
-                  {tag}
-                  <button onClick={() => removeTag(tag)} className="hover:text-primary">
+                <Badge key={tag} variant="secondary" className="gap-2 px-3 py-1.5 h-8 text-[10px] bg-white/5 border-white/10 text-foreground uppercase tracking-widest font-black rounded-lg group">
+                  #{tag}
+                  <button onClick={() => removeTag(tag)} className="text-muted-foreground hover:text-destructive opacity-50 group-hover:opacity-100 transition-opacity">
                     <X className="w-3 h-3" />
                   </button>
                 </Badge>
@@ -156,38 +163,44 @@ export function NoteEditor({ note, onUpdate, onDelete, onClose }: NoteEditorProp
                 value={newTag}
                 onChange={(e) => setNewTag(e.target.value)}
                 onKeyDown={addTag}
-                placeholder="+ ADD_TAG"
-                className="bg-transparent border-none focus:outline-none text-xs w-20 placeholder:opacity-30"
+                placeholder="+ ADD_CLASS"
+                className="bg-transparent border-none focus:outline-none text-[10px] w-24 placeholder:opacity-20 font-mono tracking-widest uppercase pl-2"
               />
             </div>
-          </div>
+          </section>
 
-          <div className="flex-1 flex flex-col space-y-4 overflow-hidden">
+          {/* AI Intelligence */}
+          <section className="flex-1 flex flex-col space-y-6 overflow-hidden">
             <div className="flex items-center justify-between">
-              <h3 className="text-xs font-bold uppercase tracking-widest text-primary opacity-80 flex items-center gap-2">
-                <Sparkles className="w-4 h-4" /> AI Summary
-              </h3>
+              <div className="flex items-center gap-2">
+                <Sparkles className="w-4 h-4 text-primary" />
+                <h3 className="text-[10px] font-black uppercase tracking-[0.3em] text-primary">Synthesis</h3>
+              </div>
               <Button 
                 variant="ghost" 
                 size="sm" 
-                className="h-6 text-[10px] gap-1 hover:text-primary" 
+                className="h-8 text-[9px] font-black tracking-widest uppercase gap-2 hover:text-primary hover:bg-primary/5 border border-white/5" 
                 onClick={handleSummarize}
                 disabled={isSummarizing || !content}
               >
                 <Sparkles className={`w-3 h-3 ${isSummarizing ? 'animate-spin' : ''}`} />
-                {isSummarizing ? 'GENERATING...' : 'GENERATE'}
+                {isSummarizing ? 'SYNTHESIZING' : 'GENERATE'}
               </Button>
             </div>
-            <ScrollArea className="flex-1 rounded-md border border-border/20 p-4 bg-muted/30">
-              <div className="text-sm text-muted-foreground whitespace-pre-wrap font-body">
+            <ScrollArea className="flex-1 rounded-2xl border border-white/5 p-6 bg-black/20 backdrop-blur-sm">
+              <div className="text-sm text-muted-foreground/80 leading-relaxed font-body">
                 {isSummarizing ? (
-                  <div className="animate-pulse">Synthesizing intelligence...</div>
+                  <div className="space-y-3">
+                    <div className="h-4 bg-white/5 rounded animate-pulse w-full" />
+                    <div className="h-4 bg-white/5 rounded animate-pulse w-3/4" />
+                    <div className="h-4 bg-white/5 rounded animate-pulse w-5/6" />
+                  </div>
                 ) : (
-                  summary || "No summary generated yet. Click generate to synthesize content."
+                  summary || <span className="text-[10px] font-mono opacity-20 uppercase tracking-[0.2em]">Ready for synthesis.</span>
                 )}
               </div>
             </ScrollArea>
-          </div>
+          </section>
         </div>
       </div>
     </div>
