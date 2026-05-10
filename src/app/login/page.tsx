@@ -1,19 +1,26 @@
 "use client";
 
 import { useState } from "react";
-import { signInWithEmailAndPassword, createUserWithEmailAndPassword, signInWithPopup, GoogleAuthProvider } from "firebase/auth";
-import { auth } from "@/lib/firebase";
+import { 
+  signInWithEmailAndPassword, 
+  createUserWithEmailAndPassword, 
+  signInWithPopup, 
+  GoogleAuthProvider 
+} from "firebase/auth";
+import { useAuth } from "@/firebase";
 import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card, CardHeader, CardTitle, CardDescription, CardContent, CardFooter } from "@/components/ui/card";
-import { toast } from "@/hooks/use-toast";
+import { useToast } from "@/hooks/use-toast";
 import { NotebookPen } from "lucide-react";
 
 export default function LoginPage() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [isRegistering, setIsRegistering] = useState(false);
+  const auth = useAuth();
+  const { toast } = useToast();
   const router = useRouter();
 
   const handleAuth = async (e: React.FormEvent) => {
@@ -27,7 +34,11 @@ export default function LoginPage() {
       }
       router.push("/");
     } catch (err: any) {
-      toast({ title: "Authentication error", description: err.message, variant: "destructive" });
+      toast({ 
+        title: "Authentication error", 
+        description: err.message, 
+        variant: "destructive" 
+      });
     }
   };
 
@@ -36,7 +47,11 @@ export default function LoginPage() {
       await signInWithPopup(auth, new GoogleAuthProvider());
       router.push("/");
     } catch (err: any) {
-      toast({ title: "Sign in failed", description: err.message, variant: "destructive" });
+      toast({ 
+        title: "Sign in failed", 
+        description: err.message, 
+        variant: "destructive" 
+      });
     }
   };
 
