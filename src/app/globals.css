@@ -33,14 +33,15 @@
     @apply border-border;
   }
   body {
-    @apply bg-background text-foreground font-sans antialiased;
-    /* Sophisticated Floral Gallery Background */
+    @apply text-foreground font-sans antialiased;
+    /* Sophisticated Floral Gallery Background - Increased Visibility */
     background-image: 
-      linear-gradient(rgba(255, 255, 255, 0.88), rgba(255, 255, 255, 0.88)),
+      linear-gradient(rgba(255, 255, 255, 0.75), rgba(255, 255, 255, 0.75)),
       url('https://picsum.photos/seed/flowers_art/1920/1080');
     background-size: cover;
     background-attachment: fixed;
     background-position: center;
+    background-color: hsl(var(--background));
   }
 }
 

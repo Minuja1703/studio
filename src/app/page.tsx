@@ -1,3 +1,4 @@
+
 "use client";
 
 import { useState } from "react";
@@ -10,7 +11,7 @@ import { NoteEditor } from "@/components/note-editor";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogTitle, DialogDescription } from "@/components/ui/dialog";
-import { Search, Plus, LogOut, Notebook } from "lucide-react";
+import { Search, Plus, LogOut } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 
 export default function Dashboard() {
@@ -22,8 +23,8 @@ export default function Dashboard() {
   const { toast } = useToast();
 
   const filteredNotes = notes.filter(note => {
-    return note.title.toLowerCase().includes(searchQuery.toLowerCase()) || 
-           note.content.toLowerCase().includes(searchQuery.toLowerCase());
+    return (note.title?.toLowerCase().includes(searchQuery.toLowerCase()) || 
+           note.content?.toLowerCase().includes(searchQuery.toLowerCase()));
   });
 
   const handleCreateNote = async () => {
@@ -45,8 +46,8 @@ export default function Dashboard() {
 
   return (
     <AuthGuard>
-      <div className="min-h-screen bg-background">
-        <header className="border-b border-blue-100 sticky top-0 bg-white/80 backdrop-blur-md z-10">
+      <div className="min-h-screen bg-transparent">
+        <header className="border-b border-blue-100 sticky top-0 bg-white/60 backdrop-blur-xl z-20">
           <div className="max-w-6xl mx-auto px-4 h-16 flex items-center justify-between">
             <div className="flex items-center gap-2">
               <div className="w-8 h-8 bg-primary rounded-lg flex items-center justify-center text-white font-bold text-sm">N</div>
@@ -72,7 +73,7 @@ export default function Dashboard() {
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               placeholder="Search archive entries..."
-              className="pl-11 h-12 rounded-2xl border-blue-100 bg-white shadow-sm focus:bg-white transition-all focus:ring-primary/10"
+              className="pl-11 h-12 rounded-2xl border-blue-100 bg-white/80 backdrop-blur shadow-sm focus:bg-white transition-all focus:ring-primary/10"
             />
           </div>
 
@@ -89,7 +90,7 @@ export default function Dashboard() {
               {filteredNotes.length === 0 && !loading && (
                 <div className="col-span-full py-32 text-center space-y-4">
                   <p className="text-muted-foreground text-lg">Your archive is currently empty.</p>
-                  <Button variant="outline" onClick={handleCreateNote} className="rounded-full border-blue-200 text-primary">
+                  <Button variant="outline" onClick={handleCreateNote} className="rounded-full border-blue-200 text-primary bg-white/50 backdrop-blur-sm">
                     Create first entry
                   </Button>
                 </div>

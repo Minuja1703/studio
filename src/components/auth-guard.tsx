@@ -1,3 +1,4 @@
+
 "use client";
 
 import { useEffect } from "react";
@@ -16,8 +17,8 @@ export function AuthGuard({ children }: { children: React.ReactNode }) {
 
   if (loading) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-[#fafafa]">
-        <div className="w-6 h-6 border-2 border-neutral-200 border-t-neutral-800 rounded-full animate-spin" />
+      <div className="min-h-screen flex items-center justify-center bg-transparent backdrop-blur-sm">
+        <div className="w-8 h-8 border-4 border-blue-100 border-t-primary rounded-full animate-spin shadow-lg" />
       </div>
     );
   }
