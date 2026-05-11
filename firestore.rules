@@ -1,18 +1,18 @@
 rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
-    // Security rules for the MonoNote Gallery Archive
-    // Deployment Trigger: 2024-05-20T10:35:00Z - Robust list/get synchronization
+    // MonoNote Gallery Archive Security Rules
+    // Deployment Trigger: 2024-05-21T14:45:00Z - Explicit owner-based listing fix
 
     match /notes/{noteId} {
-      // Simplified and robust read rules for the notes collection.
-      // 'read' covers both 'get' (single doc) and 'list' (queries).
+      // Explicitly allow list and get for the owner.
+      // Important: Queries must filter by userId == request.auth.uid
       allow read: if request.auth != null && resource.data.userId == request.auth.uid;
       
       // Allow creation only if the authenticated user sets themselves as the owner.
       allow create: if request.auth != null && request.resource.data.userId == request.auth.uid;
       
-      // Allow updates and deletions only for the document owner.
+      // Allow update and delete only for the owner.
       allow update, delete: if request.auth != null && resource.data.userId == request.auth.uid;
     }
   }
