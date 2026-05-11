@@ -11,21 +11,24 @@ interface NoteCardProps {
 export function NoteCard({ note, onClick }: NoteCardProps) {
   return (
     <div 
-      className="group bg-white border border-neutral-100 rounded-xl p-5 hover:border-black transition-colors cursor-pointer flex flex-col h-[180px]"
+      className="group bg-white border border-blue-50 rounded-2xl p-6 hover:border-primary/30 hover:shadow-lg transition-all cursor-pointer flex flex-col h-[200px]"
       onClick={onClick}
     >
-      <div className="flex-1 overflow-hidden space-y-2">
-        <h3 className="font-bold text-neutral-900 leading-tight line-clamp-2">
-          {note.title || "Untitled"}
+      <div className="flex-1 overflow-hidden space-y-3">
+        <h3 className="font-extrabold text-primary text-lg leading-tight line-clamp-2">
+          {note.title || "Untitled Entry"}
         </h3>
-        <p className="text-sm text-neutral-500 leading-relaxed line-clamp-3">
-          {note.content || "Empty..."}
+        <p className="text-sm text-muted-foreground leading-relaxed line-clamp-4">
+          {note.content || "No content yet..."}
         </p>
       </div>
-      <div className="text-[10px] text-neutral-400 mt-4 font-medium uppercase tracking-wider">
-        {note.updatedAt?.seconds 
-          ? formatDistanceToNow(new Date(note.updatedAt.seconds * 1000), { addSuffix: true })
-          : "Just now"}
+      <div className="flex items-center justify-between mt-4">
+        <div className="text-[10px] text-muted-foreground font-bold uppercase tracking-widest">
+          {note.updatedAt?.seconds 
+            ? formatDistanceToNow(new Date(note.updatedAt.seconds * 1000), { addSuffix: true })
+            : "Recently"}
+        </div>
+        <div className="w-2 h-2 rounded-full bg-primary/20 group-hover:bg-primary transition-colors" />
       </div>
     </div>
   );

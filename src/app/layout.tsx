@@ -8,8 +8,8 @@ import { FirebaseErrorListener } from '@/components/firebase-error-listener';
 const inter = Inter({ subsets: ['latin'], variable: '--font-sans' });
 
 export const metadata: Metadata = {
-  title: 'MonoNote | Modern Thinking',
-  description: 'A serene space for your thoughts, curated by intelligence.',
+  title: 'MonoNote | Professional Archive',
+  description: 'A focused space for your thoughts, in a clear dark blue and white theme.',
 };
 
 export default function RootLayout({
@@ -19,7 +19,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" className="light">
-      <body className={`${inter.variable} font-sans antialiased min-h-screen bg-[#fafafa]`}>
+      <body className={`${inter.variable} font-sans antialiased min-h-screen bg-background`}>
         <FirebaseClientProvider>
           <FirebaseErrorListener />
           {children}

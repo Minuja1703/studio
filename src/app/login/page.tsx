@@ -60,40 +60,44 @@ export default function LoginPage() {
     <div className="min-h-screen flex flex-col items-center justify-center bg-white p-6">
       <div className="w-full max-w-sm space-y-8">
         <div className="text-center space-y-2">
-          <Notebook className="w-10 h-10 mx-auto text-black" />
-          <h1 className="text-2xl font-bold tracking-tighter">MonoNote</h1>
-          <p className="text-sm text-neutral-500">Simple space for simple thoughts.</p>
+          <div className="w-16 h-16 mx-auto bg-primary rounded-full flex items-center justify-center text-white text-3xl font-bold mb-4">
+            N
+          </div>
+          <h1 className="text-3xl font-extrabold tracking-tighter text-primary">MonoNote</h1>
+          <p className="text-sm text-muted-foreground">Minimalist design for focused thinking.</p>
         </div>
 
         <form onSubmit={handleAuth} className="space-y-4">
-          <Input
-            type="email"
-            placeholder="Email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            required
-            className="rounded-lg h-12"
-          />
-          <Input
-            type="password"
-            placeholder="Password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            required
-            className="rounded-lg h-12"
-          />
-          <Button type="submit" className="w-full h-12 rounded-lg font-bold">
+          <div className="space-y-2">
+            <Input
+              type="email"
+              placeholder="Email address"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              required
+              className="rounded-lg h-12 border-blue-100 focus:border-primary"
+            />
+            <Input
+              type="password"
+              placeholder="Password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              required
+              className="rounded-lg h-12 border-blue-100 focus:border-primary"
+            />
+          </div>
+          <Button type="submit" className="w-full h-12 rounded-lg font-bold bg-primary hover:bg-primary/90">
             {isRegistering ? "Create Account" : "Sign In"}
           </Button>
         </form>
 
         <div className="flex flex-col gap-4">
-          <Button variant="outline" onClick={googleSignIn} className="w-full h-12 rounded-lg">
+          <Button variant="outline" onClick={googleSignIn} className="w-full h-12 rounded-lg border-blue-200 text-primary">
             Continue with Google
           </Button>
           <button 
             onClick={() => setIsRegistering(!isRegistering)}
-            className="text-sm font-medium text-neutral-500 hover:text-black transition-colors underline"
+            className="text-sm font-medium text-muted-foreground hover:text-primary transition-colors underline"
           >
             {isRegistering ? "Already have an account? Sign In" : "Need an account? Sign Up"}
           </button>
