@@ -11,10 +11,11 @@ export function initializeFirebase(): {
   auth: Auth | null;
 } {
   // Check for minimum required configuration
-  const hasConfig = firebaseConfig.apiKey && 
-                    firebaseConfig.apiKey !== 'undefined' && 
-                    firebaseConfig.projectId && 
-                    firebaseConfig.projectId !== 'undefined';
+  const hasConfig = 
+    firebaseConfig.apiKey && 
+    firebaseConfig.apiKey !== 'undefined' && 
+    firebaseConfig.projectId && 
+    firebaseConfig.projectId !== 'undefined';
 
   if (!hasConfig) {
     if (typeof window !== 'undefined') {

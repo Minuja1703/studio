@@ -25,14 +25,19 @@ export default function LoginPage() {
 
   const handleAuth = async (e: React.FormEvent) => {
     e.preventDefault();
-    const cleanEmail = email.trim();
     
-    if (!cleanEmail) {
+    if (!auth) {
       toast({ 
-        title: "Validation error", 
-        description: "Please enter a valid email address.", 
+        title: "Setup Required", 
+        description: "Firebase is not yet configured. Please add your API keys to proceed.", 
         variant: "destructive" 
       });
+      return;
+    }
+
+    const cleanEmail = email.trim();
+    if (!cleanEmail) {
+      toast({ title: "Validation error", description: "Please enter an email address.", variant: "destructive" });
       return;
     }
 
@@ -54,6 +59,7 @@ export default function LoginPage() {
   };
 
   const googleSignIn = async () => {
+    if (!auth) return;
     try {
       await signInWithPopup(auth, new GoogleAuthProvider());
       router.push("/");
@@ -68,7 +74,6 @@ export default function LoginPage() {
 
   return (
     <div className="min-h-screen flex items-center justify-center p-6 bg-[#fafafa] relative overflow-hidden">
-      {/* Decorative Floating 'N' element from image */}
       <div className="hidden lg:flex absolute left-8 md:left-12 top-1/2 -translate-y-1/2 w-10 h-10 items-center justify-center rounded-xl bg-neutral-800 text-white font-medium text-sm shadow-xl z-10">
         N
       </div>
