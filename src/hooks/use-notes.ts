@@ -33,9 +33,12 @@ export function useNotes(userId: string | null) {
   const [loading, setLoading] = useState(true);
   const db = useFirestore();
 
+  // Stabilize the query with useMemo to prevent infinite re-renders or rule mismatches
   const notesQuery = useMemo(() => {
     if (!userId || !db) return null;
-    // Explicitly filter by userId to satisfy security rules for 'list'
+    
+    // The query MUST include the userId filter to satisfy the security rules 'list' operation.
+    // The order by 'updatedAt' may require a composite index in production.
     return query(
       collection(db, "notes"),
       where("userId", "==", userId),
