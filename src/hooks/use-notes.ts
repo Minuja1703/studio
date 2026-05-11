@@ -33,12 +33,11 @@ export function useNotes(userId: string | null) {
   const [loading, setLoading] = useState(true);
   const db = useFirestore();
 
-  // Stabilize the query with useMemo to prevent infinite re-renders.
-  // The query filters by userId which must match the request.auth.uid in security rules.
+  // Stabilize the query with useMemo.
+  // We use the UID directly in the filter to match the security rules.
   const notesQuery = useMemo(() => {
     if (!userId || !db) return null;
     
-    // Explicitly querying by the authenticated user ID.
     return query(
       collection(db, "notes"),
       where("userId", "==", userId),
@@ -66,7 +65,7 @@ export function useNotes(userId: string | null) {
       },
       async (error) => {
         // Log the actual error for console debugging
-        console.error("Firestore permission error:", error);
+        console.error("Firestore list error:", error);
         
         // Emit rich contextual error for the development overlay
         const permissionError = new FirestorePermissionError({
