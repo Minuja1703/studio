@@ -10,16 +10,32 @@ import { NoteEditor } from "@/components/note-editor";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent } from "@/components/ui/dialog";
-import { Search, Plus, LogOut, LayoutGrid, NotebookPen, User } from "lucide-react";
-import { Badge } from "@/components/ui/badge";
+import { Search, Plus, NotebookPen, User, LayoutGrid, AlertCircle } from "lucide-react";
+import { useToast } from "@/hooks/use-toast";
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 
 export default function Dashboard() {
-  const { user } = useUser();
+  const { user, isConfigured } = useUser();
   const auth = useAuth();
   const { notes, loading, createNote, updateNote, deleteNote } = useNotes(user?.uid || null);
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedNote, setSelectedNote] = useState<Note | null>(null);
   const [activeTags, setActiveTags] = useState<string[]>([]);
+  const { toast } = useToast();
+
+  if (!isConfigured) {
+    return (
+      <div className="min-h-screen flex items-center justify-center p-6 bg-[#fafafa]">
+        <Alert variant="destructive" className="max-w-md bg-white border-red-100 shadow-xl rounded-[2rem] p-8">
+          <AlertCircle className="h-6 w-6 text-red-500" />
+          <AlertTitle className="text-lg font-semibold mb-2">Configuration Required</AlertTitle>
+          <AlertDescription className="text-neutral-500 font-medium">
+            Firebase project keys are missing. Please ensure your environment variables are correctly set in the project settings.
+          </AlertDescription>
+        </Alert>
+      </div>
+    );
+  }
 
   const allTags = Array.from(new Set(notes.flatMap(n => n.tags || [])));
 
@@ -38,11 +54,20 @@ export default function Dashboard() {
   };
 
   const handleCreateNote = async () => {
-    await createNote("Untitled Note", "");
+    try {
+      await createNote("Untitled Note", "");
+    } catch (err: any) {
+      toast({ title: "Error", description: "Could not create note.", variant: "destructive" });
+    }
   };
 
   const handleLogout = async () => {
-    await signOut(auth);
+    if (!auth) return;
+    try {
+      await signOut(auth);
+    } catch (err: any) {
+      toast({ title: "Error", description: "Sign out failed.", variant: "destructive" });
+    }
   };
 
   return (

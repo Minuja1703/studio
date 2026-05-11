@@ -14,6 +14,8 @@ import {
   serverTimestamp 
 } from "firebase/firestore";
 import { useFirestore } from "@/firebase";
+import { errorEmitter } from "@/firebase/error-emitter";
+import { FirestorePermissionError, type SecurityRuleContext } from "@/firebase/errors";
 
 export interface Note {
   id: string;
@@ -47,42 +49,81 @@ export function useNotes(userId: string | null) {
       return;
     }
 
-    const unsubscribe = onSnapshot(notesQuery, (snapshot) => {
-      const fetchedNotes = snapshot.docs.map(doc => ({
-        id: doc.id,
-        ...doc.data()
-      })) as Note[];
-      setNotes(fetchedNotes);
-      setLoading(false);
-    });
+    const unsubscribe = onSnapshot(
+      notesQuery, 
+      (snapshot) => {
+        const fetchedNotes = snapshot.docs.map(doc => ({
+          id: doc.id,
+          ...doc.data()
+        })) as Note[];
+        setNotes(fetchedNotes);
+        setLoading(false);
+      },
+      async (error) => {
+        const permissionError = new FirestorePermissionError({
+          path: 'notes',
+          operation: 'list',
+        } satisfies SecurityRuleContext);
+        errorEmitter.emit('permission-error', permissionError);
+        setLoading(false);
+      }
+    );
 
     return () => unsubscribe();
   }, [notesQuery]);
 
   const createNote = async (title: string, content: string, tags: string[] = []) => {
     if (!userId || !db) return;
-    addDoc(collection(db, "notes"), {
+    const data = {
       userId,
       title,
       content,
       tags,
       createdAt: serverTimestamp(),
       updatedAt: serverTimestamp(),
-    });
+    };
+    
+    addDoc(collection(db, "notes"), data)
+      .catch(async () => {
+        const permissionError = new FirestorePermissionError({
+          path: 'notes',
+          operation: 'create',
+          requestResourceData: data,
+        } satisfies SecurityRuleContext);
+        errorEmitter.emit('permission-error', permissionError);
+      });
   };
 
   const updateNote = async (id: string, updates: Partial<Note>) => {
     if (!db) return;
     const noteRef = doc(db, "notes", id);
-    updateDoc(noteRef, {
+    const data = {
       ...updates,
       updatedAt: serverTimestamp(),
-    });
+    };
+
+    updateDoc(noteRef, data)
+      .catch(async () => {
+        const permissionError = new FirestorePermissionError({
+          path: noteRef.path,
+          operation: 'update',
+          requestResourceData: data,
+        } satisfies SecurityRuleContext);
+        errorEmitter.emit('permission-error', permissionError);
+      });
   };
 
   const deleteNote = async (id: string) => {
     if (!db) return;
-    deleteDoc(doc(db, "notes", id));
+    const noteRef = doc(db, "notes", id);
+    deleteDoc(noteRef)
+      .catch(async () => {
+        const permissionError = new FirestorePermissionError({
+          path: noteRef.path,
+          operation: 'delete',
+        } satisfies SecurityRuleContext);
+        errorEmitter.emit('permission-error', permissionError);
+      });
   };
 
   return { notes, loading, createNote, updateNote, deleteNote };

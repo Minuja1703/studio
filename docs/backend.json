@@ -1,0 +1,58 @@
+{
+  "entities": {
+    "Note": {
+      "title": "Note",
+      "description": "A personal note or entry in the gallery archive.",
+      "type": "object",
+      "properties": {
+        "title": {
+          "type": "string",
+          "description": "The title of the note."
+        },
+        "content": {
+          "type": "string",
+          "description": "The body text of the note."
+        },
+        "tags": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Categorical tags for organization."
+        },
+        "summary": {
+          "type": "string",
+          "description": "AI-generated summary of the content."
+        },
+        "userId": {
+          "type": "string",
+          "description": "The unique identifier of the owner."
+        },
+        "createdAt": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "updatedAt": {
+          "type": "string",
+          "format": "date-time"
+        }
+      },
+      "required": [
+        "userId",
+        "title"
+      ]
+    }
+  },
+  "auth": {
+    "providers": [
+      "password",
+      "google.com"
+    ]
+  },
+  "firestore": {
+    "/notes/{noteId}": {
+      "schema": "Note",
+      "description": "Collection of user notes."
+    }
+  }
+}
