@@ -10,7 +10,7 @@ import { NoteEditor } from "@/components/note-editor";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent } from "@/components/ui/dialog";
-import { Search, Plus, NotebookPen, User, LayoutGrid, LogOut, AlertCircle } from "lucide-react";
+import { Search, Plus, NotebookPen, User, LayoutGrid, LogOut, AlertCircle, Sparkles } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 
@@ -26,11 +26,11 @@ export default function Dashboard() {
   if (!isConfigured) {
     return (
       <div className="min-h-screen flex items-center justify-center p-6 bg-[#fafafa]">
-        <Alert variant="destructive" className="max-w-md bg-white border-red-100 shadow-2xl rounded-[2.5rem] p-10">
-          <AlertCircle className="h-8 w-8 text-red-500 mb-4" />
-          <AlertTitle className="text-xl font-semibold mb-2 text-neutral-900">Project Configuration</AlertTitle>
+        <Alert variant="destructive" className="max-w-md bg-white border-neutral-100 shadow-[0_32px_128px_-12px_rgba(0,0,0,0.08)] rounded-[2.5rem] p-10">
+          <AlertCircle className="h-8 w-8 text-neutral-900 mb-4" />
+          <AlertTitle className="text-xl font-semibold mb-2 text-neutral-900">Archive Offline</AlertTitle>
           <AlertDescription className="text-neutral-500 font-medium leading-relaxed">
-            Please add your Firebase project credentials to the project environment settings to activate your personal archive.
+            Please connect your Firebase credentials to activate your curated space for thoughts.
           </AlertDescription>
         </Alert>
       </div>
@@ -73,20 +73,24 @@ export default function Dashboard() {
   return (
     <AuthGuard>
       <div className="min-h-screen bg-[#fafafa]">
-        <div className="max-w-7xl mx-auto px-8 py-16 md:py-32 space-y-24">
+        <div className="max-w-[1400px] mx-auto px-8 py-16 md:py-24 space-y-32">
           {/* Gallery Header */}
-          <header className="flex flex-col md:flex-row md:items-end justify-between gap-12 border-b border-neutral-100 pb-16">
-            <div className="space-y-6">
-              <div className="inline-flex items-center gap-3 text-neutral-300 font-bold text-[10px] uppercase tracking-[0.4em]">
-                <NotebookPen className="w-4 h-4" />
-                Curated Collection
+          <header className="flex flex-col md:flex-row md:items-end justify-between gap-12">
+            <div className="space-y-8">
+              <div className="flex items-center gap-4">
+                <div className="w-12 h-12 bg-neutral-900 rounded-full flex items-center justify-center text-white font-bold text-sm">
+                  M
+                </div>
+                <div className="inline-flex items-center gap-3 text-neutral-300 font-bold text-[10px] uppercase tracking-[0.4em]">
+                  Curated Collection
+                </div>
               </div>
-              <h1 className="text-6xl font-semibold tracking-tight text-neutral-900">
-                MonoNote
+              <h1 className="text-7xl font-semibold tracking-tighter text-neutral-900">
+                The Archive
               </h1>
-              <div className="flex items-center gap-3 text-neutral-400 text-sm font-semibold tracking-wide">
-                <User className="w-4 h-4" />
-                {user?.email}
+              <div className="flex items-center gap-3 text-neutral-400 text-xs font-bold uppercase tracking-widest">
+                <User className="w-3.5 h-3.5" />
+                Logged as {user?.email}
               </div>
             </div>
             
@@ -95,42 +99,45 @@ export default function Dashboard() {
                 variant="ghost" 
                 size="lg" 
                 onClick={handleLogout} 
-                className="text-neutral-400 hover:text-neutral-900 rounded-full px-6 h-14 font-bold text-xs uppercase tracking-widest"
+                className="text-neutral-400 hover:text-neutral-900 rounded-full px-8 h-14 font-bold text-[10px] uppercase tracking-[0.2em]"
               >
                 <LogOut className="w-4 h-4 mr-2" /> Sign Out
               </Button>
               <Button 
                 size="lg" 
                 onClick={handleCreateNote} 
-                className="bg-neutral-900 text-white hover:bg-neutral-800 rounded-full px-12 h-14 shadow-[0_24px_48px_-12px_rgba(0,0,0,0.2)] font-semibold transition-all active:scale-95"
+                className="bg-neutral-900 text-white hover:bg-neutral-800 rounded-full px-12 h-16 shadow-[0_32px_64px_-16px_rgba(0,0,0,0.2)] font-semibold text-base transition-all active:scale-95"
               >
                 <Plus className="w-5 h-5 mr-3" /> New Entry
               </Button>
             </div>
           </header>
 
-          {/* Search & Curation */}
-          <div className="space-y-12">
-            <div className="relative group max-w-3xl">
+          {/* Search & Curation Filter */}
+          <div className="space-y-16">
+            <div className="relative group max-w-2xl">
               <Search className="absolute left-0 top-1/2 -translate-y-1/2 w-6 h-6 text-neutral-200 group-focus-within:text-neutral-900 transition-colors" />
               <Input
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
                 placeholder="Search the archive..."
-                className="pl-10 h-16 bg-transparent border-none border-b border-neutral-100 rounded-none text-2xl font-medium shadow-none focus-visible:ring-0 focus:border-neutral-900 transition-all placeholder:text-neutral-100"
+                className="pl-12 h-20 bg-transparent border-none border-b border-neutral-100 rounded-none text-3xl font-medium shadow-none focus-visible:ring-0 focus:border-neutral-900 transition-all placeholder:text-neutral-100"
               />
             </div>
 
-            <div className="flex items-center gap-3 overflow-x-auto pb-4 no-scrollbar">
-              <span className="text-[10px] font-bold text-neutral-200 uppercase tracking-[0.3em] mr-6">Filter:</span>
+            <div className="flex items-center gap-4 overflow-x-auto pb-6 no-scrollbar">
+              <div className="flex items-center gap-2 text-[10px] font-bold text-neutral-300 uppercase tracking-[0.3em] mr-8">
+                <Sparkles className="w-3 h-3" />
+                Curate:
+              </div>
               {allTags.map(tag => (
                 <button
                   key={tag}
                   onClick={() => toggleTag(tag)}
-                  className={`px-6 py-2.5 text-xs font-bold rounded-xl border transition-all uppercase tracking-widest ${
+                  className={`px-8 py-3 text-[10px] font-bold rounded-full border transition-all uppercase tracking-[0.2em] whitespace-nowrap ${
                     activeTags.includes(tag) 
-                      ? "bg-neutral-900 border-neutral-900 text-white shadow-xl" 
-                      : "bg-white border-neutral-100 text-neutral-400 hover:border-neutral-200 hover:text-neutral-600"
+                      ? "bg-neutral-900 border-neutral-900 text-white shadow-xl scale-105" 
+                      : "bg-white border-neutral-100 text-neutral-400 hover:border-neutral-300 hover:text-neutral-600"
                   }`}
                 >
                   {tag}
@@ -141,7 +148,7 @@ export default function Dashboard() {
                   variant="ghost" 
                   size="sm" 
                   onClick={() => setActiveTags([])} 
-                  className="text-neutral-300 hover:text-neutral-900 text-[10px] font-bold uppercase tracking-widest ml-4"
+                  className="text-neutral-300 hover:text-neutral-900 text-[10px] font-bold uppercase tracking-[0.2em] ml-6"
                 >
                   Clear All
                 </Button>
@@ -155,18 +162,20 @@ export default function Dashboard() {
               <div className="w-8 h-8 border-2 border-neutral-100 border-t-neutral-900 rounded-full animate-spin" />
             </div>
           ) : (
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-x-16 gap-y-24">
-              {filteredNotes.map(note => (
-                <NoteCard key={note.id} note={note} onClick={() => setSelectedNote(note)} />
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-x-12 gap-y-24">
+              {filteredNotes.map((note, index) => (
+                <div key={note.id} className="gallery-item" style={{ animationDelay: `${index * 0.1}s` }}>
+                  <NoteCard note={note} onClick={() => setSelectedNote(note)} />
+                </div>
               ))}
               {filteredNotes.length === 0 && (
-                <div className="col-span-full py-60 flex flex-col items-center justify-center text-center space-y-8">
-                  <div className="w-24 h-24 rounded-full bg-neutral-50 flex items-center justify-center text-neutral-200">
-                    <LayoutGrid className="w-10 h-10" />
+                <div className="col-span-full py-60 flex flex-col items-center justify-center text-center space-y-10">
+                  <div className="w-32 h-32 rounded-full bg-neutral-50 flex items-center justify-center text-neutral-200">
+                    <NotebookPen className="w-12 h-12" />
                   </div>
-                  <div className="space-y-3">
-                    <h3 className="text-3xl font-semibold text-neutral-300">Quiet Space</h3>
-                    <p className="text-neutral-200 font-bold uppercase tracking-widest text-xs">Capture your first thought to begin.</p>
+                  <div className="space-y-4">
+                    <h3 className="text-4xl font-semibold text-neutral-300 tracking-tight">The archive is silent.</h3>
+                    <p className="text-neutral-200 font-bold uppercase tracking-[0.3em] text-xs">Create your first entry to begin curation.</p>
                   </div>
                 </div>
               )}
@@ -175,7 +184,7 @@ export default function Dashboard() {
 
           {/* Immersive Note Editor */}
           <Dialog open={!!selectedNote} onOpenChange={() => setSelectedNote(null)}>
-            <DialogContent className="max-w-screen-2xl w-[96vw] h-[92vh] bg-white p-0 rounded-[3rem] overflow-hidden shadow-[0_64px_256px_-32px_rgba(0,0,0,0.15)] border-none ring-1 ring-neutral-100">
+            <DialogContent className="max-w-screen-2xl w-[96vw] h-[92vh] bg-white p-0 rounded-[3.5rem] overflow-hidden shadow-[0_128px_256px_-64px_rgba(0,0,0,0.2)] border-none ring-1 ring-neutral-100">
               {selectedNote && (
                 <NoteEditor
                   note={selectedNote}
