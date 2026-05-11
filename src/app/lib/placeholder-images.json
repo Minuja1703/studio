@@ -8,10 +8,10 @@
       "imageHint": "minimal architecture"
     },
     {
-      "id": "flower-background",
-      "description": "Classical oil painting of vibrant flowers in a gallery style",
-      "imageUrl": "https://picsum.photos/seed/flowers_art/1920/1080",
-      "imageHint": "flower painting"
+      "id": "workspace-background",
+      "description": "Professional workspace with coffee, pen, and laptop",
+      "imageUrl": "https://picsum.photos/seed/workspace_creative/1920/1080",
+      "imageHint": "coffee laptop"
     }
   ]
 }
