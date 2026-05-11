@@ -8,6 +8,8 @@ import {
   DocumentData,
   FirestoreError
 } from 'firebase/firestore';
+import { errorEmitter } from '@/firebase/error-emitter';
+import { FirestorePermissionError, type SecurityRuleContext } from '@/firebase/errors';
 
 export function useCollection<T = DocumentData>(query: Query<T> | null) {
   const [data, setData] = useState<T[]>([]);
@@ -25,10 +27,15 @@ export function useCollection<T = DocumentData>(query: Query<T> | null) {
     const unsubscribe = onSnapshot(
       query,
       (snapshot: QuerySnapshot<T>) => {
-        setData(snapshot.docs.map((doc) => ({ ...doc.data(), id: doc.id })));
+        setData(snapshot.docs.map((doc) => ({ ...doc.data(), id: doc.id } as T & { id: string })));
         setLoading(false);
       },
-      (err) => {
+      async (err) => {
+        const permissionError = new FirestorePermissionError({
+          path: 'collection',
+          operation: 'list',
+        } satisfies SecurityRuleContext);
+        errorEmitter.emit('permission-error', permissionError);
         setError(err);
         setLoading(false);
       }

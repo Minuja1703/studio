@@ -49,6 +49,7 @@ export function useNotes(userId: string | null) {
       return;
     }
 
+    setLoading(true);
     const unsubscribe = onSnapshot(
       notesQuery, 
       (snapshot) => {

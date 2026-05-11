@@ -1,9 +1,20 @@
 rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
+    // Security rules for the MonoNote Gallery Archive
+    
     match /notes/{noteId} {
-      allow read, update, delete: if request.auth != null && request.auth.uid == resource.data.userId;
+      // Allow users to read notes they own.
+      // For collection queries (list), the query must be filtered by 'userId'.
+      allow read: if request.auth != null && (
+        resource == null || resource.data.userId == request.auth.uid
+      );
+      
+      // Allow creation of notes where the authenticated user is the owner.
       allow create: if request.auth != null && request.resource.data.userId == request.auth.uid;
+      
+      // Allow updates and deletions only for the document owner.
+      allow update, delete: if request.auth != null && resource.data.userId == request.auth.uid;
     }
   }
 }
