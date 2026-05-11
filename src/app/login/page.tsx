@@ -56,14 +56,14 @@ export default function LoginPage() {
   };
 
   return (
-    <div className="min-h-screen flex flex-col items-center justify-center bg-transparent p-6">
-      <div className="w-full max-w-sm space-y-8 bg-white p-8 rounded-[2rem] shadow-2xl border border-white">
+    <div className="min-h-screen flex flex-col items-center justify-center p-6">
+      <div className="w-full max-w-sm space-y-8 bg-white/60 p-8 rounded-[2rem] shadow-2xl border border-white/40">
         <div className="text-center space-y-2">
           <div className="w-16 h-16 mx-auto bg-primary rounded-2xl flex items-center justify-center text-white text-3xl font-bold mb-4 shadow-xl">
             N
           </div>
           <h1 className="text-3xl font-extrabold tracking-tighter text-primary">MonoNote</h1>
-          <p className="text-sm text-muted-foreground">Professional archive for focused thinking.</p>
+          <p className="text-sm text-primary/70">Professional archive for focused thinking.</p>
         </div>
 
         <form onSubmit={handleAuth} className="space-y-4">
@@ -74,7 +74,7 @@ export default function LoginPage() {
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               required
-              className="rounded-xl h-12 border-blue-50 focus:border-primary bg-white"
+              className="rounded-xl h-12 border-primary/10 focus:border-primary bg-white/50"
             />
             <Input
               type="password"
@@ -82,7 +82,7 @@ export default function LoginPage() {
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               required
-              className="rounded-xl h-12 border-blue-50 focus:border-primary bg-white"
+              className="rounded-xl h-12 border-primary/10 focus:border-primary bg-white/50"
             />
           </div>
           <Button type="submit" className="w-full h-12 rounded-xl font-bold bg-primary hover:bg-primary/90 transition-all">
@@ -91,12 +91,12 @@ export default function LoginPage() {
         </form>
 
         <div className="flex flex-col gap-4">
-          <Button variant="outline" onClick={googleSignIn} className="w-full h-12 rounded-xl border-blue-100 text-primary hover:bg-blue-50 transition-all">
+          <Button variant="outline" onClick={googleSignIn} className="w-full h-12 rounded-xl border-primary/20 text-primary hover:bg-primary/5 transition-all bg-white/30">
             Continue with Google
           </Button>
           <button 
             onClick={() => setIsRegistering(!isRegistering)}
-            className="text-sm font-medium text-muted-foreground hover:text-primary transition-colors underline"
+            className="text-sm font-medium text-primary/60 hover:text-primary transition-colors underline"
           >
             {isRegistering ? "Already have an account? Sign In" : "Need an account? Sign Up"}
           </button>

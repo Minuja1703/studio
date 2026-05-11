@@ -20,7 +20,7 @@
     --accent-foreground: 210 40% 98%;
     --destructive: 0 84.2% 60.2%;
     --destructive-foreground: 210 40% 98%;
-    --border: 214.3 31.8% 91.4%;
+    --border: 222 47% 11% / 0.1;
     --input: 214.3 31.8% 91.4%;
     --ring: 222.2 84% 4.9%;
     --radius: 0.75rem;
@@ -33,9 +33,9 @@
   }
   body {
     @apply text-foreground font-sans antialiased;
-    /* Sophisticated Floral Gallery Background - Adjusted for visibility */
+    /* Sophisticated Floral Gallery Background */
     background-image: 
-      linear-gradient(rgba(255, 255, 255, 0.65), rgba(255, 255, 255, 0.65)),
+      linear-gradient(rgba(255, 255, 255, 0.45), rgba(255, 255, 255, 0.45)),
       url('https://picsum.photos/seed/flowers_art/1920/1080');
     background-size: cover;
     background-attachment: fixed;
