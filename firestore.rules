@@ -2,11 +2,13 @@ rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
     // Security rules for the MonoNote Gallery Archive
+    // Deployment Trigger: 2024-05-20T10:00:00Z
     
     match /notes/{noteId} {
-      // Allow users to read notes they own.
-      // For collection queries (list), the query must be filtered by 'userId'.
+      // Allow users to read (get and list) notes they own.
+      // The query must be filtered by 'userId' to match the request.auth.uid.
       allow read: if request.auth != null && (
+        // For 'get' operations, handle potentially non-existent documents gracefully
         resource == null || resource.data.userId == request.auth.uid
       );
       
