@@ -6,6 +6,7 @@ service cloud.firestore {
 
     match /notes/{noteId} {
       // Allow read, update, and delete only if the user is the owner
+      // 'read' covers both 'get' and 'list'
       allow read, update, delete: if request.auth != null && resource.data.userId == request.auth.uid;
       
       // Allow creation if authenticated and setting themselves as owner

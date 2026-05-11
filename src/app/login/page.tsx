@@ -49,7 +49,9 @@ export default function LoginPage() {
     } catch (err: any) {
       toast({ 
         title: "Sign in failed", 
-        description: err.message, 
+        description: err.message === "auth/unauthorised-domain" 
+          ? "This domain is not authorized. Please add it in the Firebase Console."
+          : err.message, 
         variant: "destructive" 
       });
     }
