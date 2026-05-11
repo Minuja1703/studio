@@ -1,11 +1,10 @@
-
 {
   "placeholderImages": [
     {
-      "id": "hero-abstract",
-      "description": "Abstract digital lines representing connectivity and data flow",
-      "imageUrl": "https://picsum.photos/seed/mono1/1200/800",
-      "imageHint": "abstract digital"
+      "id": "gallery-hero",
+      "description": "Minimalist architectural space with soft light",
+      "imageUrl": "https://picsum.photos/seed/mono_gallery/1200/800",
+      "imageHint": "minimal architecture"
     }
   ]
 }
