@@ -9,9 +9,9 @@
     },
     {
       "id": "workspace-background",
-      "description": "Professional workspace with coffee, pen, and laptop",
-      "imageUrl": "https://picsum.photos/seed/workspace_creative/1920/1080",
-      "imageHint": "coffee laptop"
+      "description": "Professional workspace with pen and laptop",
+      "imageUrl": "https://picsum.photos/seed/pen_laptop_workspace/1920/1080",
+      "imageHint": "pen laptop"
     }
   ]
 }

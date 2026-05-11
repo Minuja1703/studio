@@ -1,3 +1,4 @@
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -6,15 +7,15 @@
   :root {
     --background: 210 40% 99%;
     --foreground: 222 47% 11%;
-    --card: 0 0% 100% / 0.4;
+    --card: 0 0% 100% / 0.6;
     --card-foreground: 222 47% 11%;
-    --popover: 0 0% 100% / 0.4;
+    --popover: 0 0% 100% / 0.6;
     --popover-foreground: 222 47% 11%;
     --primary: 222 47% 11%;
     --primary-foreground: 210 40% 98%;
-    --secondary: 210 40% 96.1% / 0.5;
+    --secondary: 210 40% 96.1% / 0.4;
     --secondary-foreground: 222 47% 11%;
-    --muted: 210 40% 96.1% / 0.5;
+    --muted: 210 40% 96.1% / 0.4;
     --muted-foreground: 215.4 16.3% 46.9%;
     --accent: 217 91% 60%;
     --accent-foreground: 210 40% 98%;
@@ -33,10 +34,9 @@
   }
   body {
     @apply text-foreground font-sans antialiased;
-    /* Workspace Background with Coffee, Pen, Laptop */
     background-image: 
-      linear-gradient(rgba(255, 255, 255, 0.4), rgba(255, 255, 255, 0.4)),
-      url('https://picsum.photos/seed/workspace_creative/1920/1080');
+      linear-gradient(rgba(255, 255, 255, 0.3), rgba(255, 255, 255, 0.3)),
+      url('https://picsum.photos/seed/pen_laptop_workspace/1920/1080');
     background-size: cover;
     background-attachment: fixed;
     background-position: center;
