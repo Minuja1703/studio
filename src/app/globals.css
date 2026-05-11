@@ -1,3 +1,4 @@
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -33,11 +34,13 @@
   }
   body {
     @apply bg-background text-foreground font-sans antialiased;
-    /* Subtle technical grid texture */
+    /* Sophisticated Floral Gallery Background */
     background-image: 
-      radial-gradient(circle at 1px 1px, hsl(var(--primary) / 0.04) 1px, transparent 0);
-    background-size: 32px 32px;
+      linear-gradient(rgba(255, 255, 255, 0.88), rgba(255, 255, 255, 0.88)),
+      url('https://picsum.photos/seed/flowers_art/1920/1080');
+    background-size: cover;
     background-attachment: fixed;
+    background-position: center;
   }
 }
 

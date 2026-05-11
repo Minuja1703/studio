@@ -1,3 +1,4 @@
+
 {
   "placeholderImages": [
     {
@@ -5,6 +6,12 @@
       "description": "Minimalist architectural space with soft light",
       "imageUrl": "https://picsum.photos/seed/mono_gallery/1200/800",
       "imageHint": "minimal architecture"
+    },
+    {
+      "id": "flower-background",
+      "description": "Classical oil painting of vibrant flowers in a gallery style",
+      "imageUrl": "https://picsum.photos/seed/flowers_art/1920/1080",
+      "imageHint": "flower painting"
     }
   ]
 }
