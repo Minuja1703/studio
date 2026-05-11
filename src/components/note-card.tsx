@@ -1,3 +1,4 @@
+
 "use client";
 
 import { Note } from "@/hooks/use-notes";
