@@ -35,6 +35,7 @@ export function useNotes(userId: string | null) {
 
   const notesQuery = useMemo(() => {
     if (!userId || !db) return null;
+    // Explicitly filter by userId to satisfy security rules for 'list'
     return query(
       collection(db, "notes"),
       where("userId", "==", userId),
@@ -61,6 +62,7 @@ export function useNotes(userId: string | null) {
         setLoading(false);
       },
       async (error) => {
+        // Emit rich contextual error for the development overlay
         const permissionError = new FirestorePermissionError({
           path: 'notes',
           operation: 'list',
