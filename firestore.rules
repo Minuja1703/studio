@@ -2,18 +2,14 @@ rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
     // MonoNote Security Rules
-    // Last Updated: 2024-05-22T16:00:00Z - Enhanced Owner Validation
+    // Standard Owner-Based Permissions
 
     match /notes/{noteId} {
-      // Allow read operations (get and list) if the authenticated user owns the note.
-      // For list operations, the query MUST filter by userId == request.auth.uid.
-      allow read: if request.auth != null && (resource == null || resource.data.userId == request.auth.uid);
+      // Allow read, update, and delete only if the user is the owner
+      allow read, update, delete: if request.auth != null && resource.data.userId == request.auth.uid;
       
-      // Allow creation if the user is authenticated and sets themselves as the owner.
+      // Allow creation if authenticated and setting themselves as owner
       allow create: if request.auth != null && request.resource.data.userId == request.auth.uid;
-      
-      // Allow updates and deletes only for the note owner.
-      allow update, delete: if request.auth != null && resource.data.userId == request.auth.uid;
     }
   }
 }

@@ -1,4 +1,3 @@
-
 "use client";
 
 import { useState } from "react";
@@ -58,7 +57,7 @@ export default function LoginPage() {
 
   return (
     <div className="min-h-screen flex flex-col items-center justify-center bg-transparent p-6">
-      <div className="w-full max-w-sm space-y-8 bg-white/90 backdrop-blur-xl p-8 rounded-[2rem] shadow-2xl border border-white">
+      <div className="w-full max-w-sm space-y-8 bg-white p-8 rounded-[2rem] shadow-2xl border border-white">
         <div className="text-center space-y-2">
           <div className="w-16 h-16 mx-auto bg-primary rounded-2xl flex items-center justify-center text-white text-3xl font-bold mb-4 shadow-xl">
             N
@@ -75,7 +74,7 @@ export default function LoginPage() {
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               required
-              className="rounded-xl h-12 border-blue-50 focus:border-primary bg-white/50"
+              className="rounded-xl h-12 border-blue-50 focus:border-primary bg-white"
             />
             <Input
               type="password"
@@ -83,7 +82,7 @@ export default function LoginPage() {
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               required
-              className="rounded-xl h-12 border-blue-50 focus:border-primary bg-white/50"
+              className="rounded-xl h-12 border-blue-50 focus:border-primary bg-white"
             />
           </div>
           <Button type="submit" className="w-full h-12 rounded-xl font-bold bg-primary hover:bg-primary/90 transition-all">
