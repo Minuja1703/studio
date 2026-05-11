@@ -47,10 +47,15 @@ export default function LoginPage() {
       await signInWithPopup(auth, new GoogleAuthProvider());
       router.push("/");
     } catch (err: any) {
+      // Gracefully handle the popup closed by user error
+      if (err.code === 'auth/popup-closed-by-user') {
+        return;
+      }
+      
       toast({ 
         title: "Sign in failed", 
-        description: err.message === "auth/unauthorised-domain" 
-          ? "This domain is not authorized. Please add it in the Firebase Console."
+        description: err.code === "auth/unauthorised-domain" 
+          ? "This domain is not authorized. Please add it in the Firebase Console under Authentication > Settings > Authorized domains."
           : err.message, 
         variant: "destructive" 
       });
@@ -65,7 +70,7 @@ export default function LoginPage() {
             N
           </div>
           <h1 className="text-3xl font-extrabold tracking-tighter text-primary">MonoNote</h1>
-          <p className="text-sm text-primary/70">Professional archive for focused thinking.</p>
+          <p className="text-sm text-primary/70 font-medium">Professional Archive Gallery</p>
         </div>
 
         <form onSubmit={handleAuth} className="space-y-4">
@@ -76,7 +81,7 @@ export default function LoginPage() {
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               required
-              className="rounded-xl h-12 border-primary/10 focus:border-primary bg-white/50"
+              className="rounded-xl h-12 border-primary/10 focus:border-primary bg-white/50 text-primary placeholder:text-primary/40"
             />
             <Input
               type="password"
@@ -84,21 +89,21 @@ export default function LoginPage() {
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               required
-              className="rounded-xl h-12 border-primary/10 focus:border-primary bg-white/50"
+              className="rounded-xl h-12 border-primary/10 focus:border-primary bg-white/50 text-primary placeholder:text-primary/40"
             />
           </div>
-          <Button type="submit" className="w-full h-12 rounded-xl font-bold bg-primary hover:bg-primary/90 transition-all">
+          <Button type="submit" className="w-full h-12 rounded-xl font-bold bg-primary hover:bg-primary/90 transition-all text-white">
             {isRegistering ? "Create Account" : "Sign In"}
           </Button>
         </form>
 
         <div className="flex flex-col gap-4">
-          <Button variant="outline" onClick={googleSignIn} className="w-full h-12 rounded-xl border-primary/20 text-primary hover:bg-primary/5 transition-all bg-white/30">
+          <Button variant="outline" onClick={googleSignIn} className="w-full h-12 rounded-xl border-primary/20 text-primary hover:bg-primary/5 transition-all bg-white/30 font-bold">
             Continue with Google
           </Button>
           <button 
             onClick={() => setIsRegistering(!isRegistering)}
-            className="text-sm font-medium text-primary/60 hover:text-primary transition-colors underline"
+            className="text-sm font-bold text-primary/60 hover:text-primary transition-colors underline"
           >
             {isRegistering ? "Already have an account? Sign In" : "Need an account? Sign Up"}
           </button>
